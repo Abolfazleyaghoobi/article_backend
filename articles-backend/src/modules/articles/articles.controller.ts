@@ -35,22 +35,36 @@ export const createArticleController = async (
 
 // get all articles controller
 export const getAllArticlesController = async (
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const articles = await getAllArticles();
+    const page = Number(req.query.page ?? 1);
+    const limit = Number(req.query.limit ?? 10);
+
+    if (
+      !Number.isInteger(page) ||
+      page < 1 ||
+      !Number.isInteger(limit) ||
+      limit < 1
+    ) {
+      throw new AppError(
+        "شماره صفحه یا تعداد نتایج معتبر نیست",
+        400,
+      );
+    }
+
+    const result = await getAllArticles(page, limit);
 
     res.status(200).json({
       success: true,
-      data: articles,
+      ...result,
     });
   } catch (error) {
     next(error);
   }
 };
-
 // get article by id controller
 export const getArticleByIdController = async (
   req: Request,

@@ -25,12 +25,28 @@ export const createArticle = async (data: CreateArticleDto) => {
 
 // get all articles
 
-export const getAllArticles = async () => {
-  return articleRepository.find({
-    order: {
-      createdAt: "DESC",
-    },
+export const getAllArticles = async (
+  page = 1,
+  limit = 10,
+) => {
+  const safePage = Math.max(1, Math.floor(page));
+  const safeLimit = Math.min(50, Math.max(1, Math.floor(limit)));
+
+  const [articles, total] = await articleRepository.findAndCount({
+    order: { createdAt: "DESC" },
+    skip: (safePage - 1) * safeLimit,
+    take: safeLimit,
   });
+
+  return {
+    data: articles,
+    pagination: {
+      page: safePage,
+      limit: safeLimit,
+      total,
+      totalPages: Math.ceil(total / safeLimit),
+    },
+  };
 };
 
 // get article by id
