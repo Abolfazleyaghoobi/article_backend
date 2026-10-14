@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { AppDataSource } from "../../database/data-source";
 import { User } from "./entities/user.entity";
 import { createUserSchema ,updateUserSchema} from "./users.dto";
+import { AppError } from "../../common/errors/app.error";
 
 const userRepository = AppDataSource.getRepository(User);
 export const getUsers = async (_req: Request, res: Response) => {
@@ -32,13 +33,27 @@ export const createUser = async (req: Request, res: Response) => {
 
 
 
-  const user = userRepository.create(result.data);
+ const user = userRepository.create(result.data);
+
+try {
   const savedUser = await userRepository.save(user);
 
   return res.status(201).json({
     success: true,
     data: savedUser,
   });
+} catch (error) {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    error.code === "ER_DUP_ENTRY"
+  ) {
+    throw new AppError("این ایمیل قبلاً ثبت شده است", 409);
+  }
+
+  throw error;
+}
 };
 
 
@@ -126,5 +141,37 @@ export const updateUser = async (
   return res.json({
     success: true,
     data: updatedUser,
+  });
+};
+
+
+// delete user
+
+export const deleteUser = async (
+  req: Request,
+  res: Response,
+) => {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id) || id < 1) {
+    return res.status(400).json({
+      success: false,
+      message: "شناسه کاربر معتبر نیست",
+    });
+  }
+
+  const user = await userRepository.findOneBy({ id });
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "کاربر پیدا نشد",
+    });
+  }
+
+  await userRepository.remove(user);
+
+  return res.status(200).json({
+    message:"user deleted successfully"
   });
 };
