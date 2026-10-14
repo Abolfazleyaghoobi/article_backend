@@ -28,11 +28,13 @@ export const createArticle = async (data: CreateArticleDto) => {
 export const getAllArticles = async (
   page = 1,
   limit = 10,
+  status?: "draft" | "published",
 ) => {
   const safePage = Math.max(1, Math.floor(page));
   const safeLimit = Math.min(50, Math.max(1, Math.floor(limit)));
 
   const [articles, total] = await articleRepository.findAndCount({
+    where: status ? { status } : {},
     order: { createdAt: "DESC" },
     skip: (safePage - 1) * safeLimit,
     take: safeLimit,
@@ -48,7 +50,6 @@ export const getAllArticles = async (
     },
   };
 };
-
 // get article by id
 export const getArticleById = async (id: number) => {
   const article = await articleRepository.findOneBy({ id });

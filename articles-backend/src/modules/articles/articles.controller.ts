@@ -42,6 +42,7 @@ export const getAllArticlesController = async (
   try {
     const page = Number(req.query.page ?? 1);
     const limit = Number(req.query.limit ?? 10);
+    const statusValue = req.query.status;
 
     if (
       !Number.isInteger(page) ||
@@ -55,7 +56,20 @@ export const getAllArticlesController = async (
       );
     }
 
-    const result = await getAllArticles(page, limit);
+    if (
+      statusValue !== undefined &&
+      statusValue !== "draft" &&
+      statusValue !== "published"
+    ) {
+      throw new AppError("وضعیت مقاله معتبر نیست", 400);
+    }
+
+    const status =
+      statusValue === "draft" || statusValue === "published"
+        ? statusValue
+        : undefined;
+
+    const result = await getAllArticles(page, limit, status);
 
     res.status(200).json({
       success: true,
