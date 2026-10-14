@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>گزارش آموزشی بک‌اند مقالات</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Tahoma, Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      line-height: 2;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, #172554, #2563eb);
+      color: white;
+      padding: 30px;
+      border-radius: 18px;
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    section {
+      background: white;
+      padding: 24px;
+      margin-bottom: 20px;
+      border-radius: 14px;
+      border: 1px solid #dbe3ef;
+    }
+
+    h2 {
+      color: #1d4ed8;
+      border-bottom: 2px solid #dbeafe;
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      color: #334155;
+    }
+
+    code {
+      direction: ltr;
+      unicode-bidi: isolate;
+      background: #e2e8f0;
+      padding: 3px 6px;
+      border-radius: 5px;
+      font-family: monospace;
+    }
+
+    pre {
+      direction: ltr;
+      text-align: left;
+      white-space: pre;
+      overflow-x: auto;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 18px;
+      border-radius: 10px;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 10px;
+      text-align: right;
+    }
+
+    th {
+      background: #dbeafe;
+    }
+
+    .success {
+      background: #dcfce7;
+      border-right: 5px solid #16a34a;
+      padding: 14px;
+      border-radius: 8px;
+    }
+
+    .warning {
+      background: #fef3c7;
+      border-right: 5px solid #d97706;
+      padding: 14px;
+      border-radius: 8px;
+    }
+
+    .info {
+      background: #eff6ff;
+      border-right: 5px solid #2563eb;
+      padding: 14px;
+      border-radius: 8px;
+    }
+
+    a {
+      color: #2563eb;
+    }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      padding: 20px;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      section {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <header>
+    <h1>گزارش آموزشی پروژه بک‌اند مقالات 🚀</h1>
+    <p>
+      خلاصه کارهای انجام‌شده، مفاهیم آموزشی و نکات فنی
+    </p>
+    <p>تاریخ: ۱۳ اکتبر ۲۰۲۶</p>
+    <p>TypeScript | Express | TypeORM | MariaDB | Zod</p>
+  </header>
+
+  <section>
+    <h2>۱. امروز چه کارهایی انجام دادیم؟</h2>
+
+    <ul>
+      <li>بررسی اتصال پروژه به دیتابیس MariaDB</li>
+      <li>بررسی Entity جدول کاربران</li>
+      <li>ساخت مسیر دریافت همه کاربران</li>
+      <li>ساخت API ایجاد کاربر</li>
+      <li>نصب و استفاده از Zod</li>
+      <li>اعتبارسنجی اطلاعات ورودی</li>
+      <li>ساخت API دریافت یک کاربر با شناسه</li>
+      <li>ساخت API ویرایش کاربر با PATCH</li>
+      <li>ثبت Routeهای مربوط به کاربران</li>
+      <li>آزمایش APIهای دریافت و ساخت کاربر</li>
+    </ul>
+
+    <p class="success">
+      اتصال دیتابیس و APIهای دریافت و ساخت کاربر طبق آزمایش‌هایی
+      که انجام دادی، درست کار کردند.
+    </p>
+
+    <p class="warning">
+      نتیجه نهایی تست PATCH هنوز مشخص نشده است.
+      API حذف کاربر هم هنوز پیاده‌سازی نشده است.
+    </p>
+  </section>
+
+  <section>
+    <h2>۲. ساختار جدول users</h2>
+
+    <p>
+      Entity کاربر در مسیر زیر قرار دارد:
+    </p>
+
+    <p><code>src/modules/users/entities/user.entity.ts</code></p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ستون</th>
+          <th>کاربرد</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>id</td>
+          <td>شناسه یکتای کاربر</td>
+        </tr>
+        <tr>
+          <td>name</td>
+          <td>نام کاربر با حداکثر ۱۰۰ کاراکتر</td>
+        </tr>
+        <tr>
+          <td>email</td>
+          <td>ایمیل کاربر با محدودیت یکتا بودن</td>
+        </tr>
+        <tr>
+          <td>createdAt</td>
+          <td>زمان ایجاد رکورد</td>
+        </tr>
+        <tr>
+          <td>updatedAt</td>
+          <td>زمان آخرین ویرایش رکورد</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>چرا email یکتا است؟</h3>
+    <p>
+      چون در Entity از unique استفاده شده است، دیتابیس اجازه
+      نمی‌دهد دو کاربر ایمیل یکسان داشته باشند.
+    </p>
+  </section>
+
+  <section>
+    <h2>۳. تنظیمات اتصال دیتابیس</h2>
+
+    <p>
+      فایل:
+      <code>src/database/data-source.ts</code>
+    </p>
+
+    <pre><code>import "reflect-metadata";
+import { DataSource } from "typeorm";
+import { env } from "../config/env";
+import { User } from "../modules/users/entities/user.entity";
+
+export const AppDataSource = new DataSource({
+  type: "mysql",
+  host: env.DB_HOST,
+  port: env.DB_PORT,
+  username: env.DB_USERNAME,
+  password: env.DB_PASSWORD,
+  database: env.DB_DATABASE,
+  entities: [User],
+  migrations: ["articles-backend/src/database/migrations/*.ts"],
+  synchronize: false,
+  logging: false,
+});</code></pre>
+
+    <h3>نکات فنی</h3>
+
+    <ul>
+      <li>
+        <code>DataSource</code> تنظیمات اتصال و دسترسی TypeORM
+        به دیتابیس را فراهم می‌کند.
+      </li>
+      <li>
+        <code>type: "mysql"</code> برای اتصال TypeORM به MariaDB
+        نیز استفاده می‌شود.
+      </li>
+      <li>
+        پکیج <code>mysql2</code> درایور ارتباط برنامه با دیتابیس است.
+      </li>
+      <li>
+        <code>entities: [User]</code> به TypeORM معرفی می‌کند
+        که Entity کاربر را بشناسد.
+      </li>
+      <li>
+        <code>synchronize: false</code> از تغییر خودکار ساختار
+        دیتابیس براساس Entity جلوگیری می‌کند.
+      </li>
+      <li>
+        Migrationها برای مدیریت تغییرات ساختار دیتابیس استفاده می‌شوند.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>۴. مفهوم DTO و Zod</h2>
+
+    <h3>DTO چیست؟</h3>
+
+    <p>
+      DTO مخفف Data Transfer Object است.
+      این مفهوم مشخص می‌کند چه ساختاری از داده را بین بخش‌های
+      برنامه منتقل می‌کنیم.
+    </p>
+
+    <h3>Zod چیست؟</h3>
+
+    <p>
+      Zod یک کتابخانه اعتبارسنجی است که داده‌های ورودی را
+      در زمان اجرا بررسی می‌کند.
+    </p>
+
+    <p>
+      فایل:
+      <code>src/modules/users/users.dto.ts</code>
+    </p>
+
+    <pre><code>import { z } from "zod";
+
+export const createUserSchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  email: z.string().trim().email().max(150),
+});
+
+export type CreateUserDto =
+  z.infer&lt;typeof createUserSchema&gt;;
+
+export const updateUserSchema =
+  createUserSchema.partial();
+
+export type UpdateUserDto =
+  z.infer&lt;typeof updateUserSchema&gt;;</code></pre>
+
+    <h3>توضیح بخش‌های مهم</h3>
+
+    <ul>
+      <li>
+        <code>z.object()</code>: ساختار شیء ورودی را تعریف می‌کند.
+      </li>
+      <li>
+        <code>z.string()</code>: مشخص می‌کند مقدار باید رشته باشد.
+      </li>
+      <li>
+        <code>trim()</code>: فاصله ابتدا و انتهای رشته را حذف می‌کند.
+      </li>
+      <li>
+        <code>min(2)</code>: حداقل طول نام را مشخص می‌کند.
+      </li>
+      <li>
+        <code>max(100)</code>: حداکثر طول نام را مشخص می‌کند.
+      </li>
+      <li>
+        <code>email()</code>: قالب ایمیل را بررسی می‌کند.
+      </li>
+      <li>
+        <code>z.infer</code>: نوع TypeScript را از Schema استخراج می‌کند.
+      </li>
+      <li>
+        <code>partial()</code>: همه فیلدها را برای ویرایش اختیاری می‌کند.
+      </li>
+    </ul>
+
+    <p class="info">
+      DTO و Schema یک چیز نیستند: Schema قوانین اعتبارسنجی زمان اجرا
+      را تعریف می‌کند؛ نوع DTO به TypeScript کمک می‌کند نوع داده‌ها
+      را در زمان توسعه بررسی کند.
+    </p>
+  </section>
+
+  <section>
+    <h2>۵. کنترلر کاربران</h2>
+
+    <p>
+      کنترلر درخواست را دریافت می‌کند، منطق لازم را اجرا می‌کند
+      و پاسخ مناسب را به مشتری برمی‌گرداند.
+    </p>
+
+    <h3>دریافت Repository</h3>
+
+    <pre><code>const userRepository =
+  AppDataSource.getRepository(User);</code></pre>
+
+    <p>
+      Repository ابزار TypeORM برای کار با Entity متناظر با جدول
+      دیتابیس است.
+    </p>
+
+    <h3>دریافت همه کاربران</h3>
+
+    <pre><code>const users = await userRepository.find();
+
+res.json({
+  success: true,
+  data: users,
+});</code></pre>
+
+    <p>
+      متد <code>find()</code> رکوردهای جدول را دریافت می‌کند.
+      اگر جدول خالی باشد، نتیجه معمولاً آرایه خالی است:
+      <code>[]</code>. این نتیجه به‌خودی‌خود خطا نیست.
+    </p>
+
+    <h3>ساخت کاربر</h3>
+
+    <pre><code>const result = createUserSchema.safeParse(req.body);
+
+if (!result.success) {
+  return res.status(400).json({
+    success: false,
+    message: "اطلاعات ورودی معتبر نیست",
+  });
+}
+
+const user = userRepository.create(result.data);
+const savedUser = await userRepository.save(user);
+
+return res.status(201).json({
+  success: true,
+  data: savedUser,
+});</code></pre>
+
+    <ul>
+      <li>
+        <code>req.body</code> اطلاعات ارسال‌شده در بدنه درخواست است.
+      </li>
+      <li>
+        <code>safeParse()</code> ورودی را اعتبارسنجی می‌کند.
+      </li>
+      <li>
+        <code>create()</code> یک Entity می‌سازد؛ اما به‌تنهایی
+        آن را در دیتابیس ذخیره نمی‌کند.
+      </li>
+      <li>
+        <code>save()</code> عملیات ذخیره را انجام می‌دهد.
+      </li>
+      <li>
+        <code>201 Created</code> پاسخ متداول برای ایجاد موفق است.
+      </li>
+    </ul>
+
+    <h3>دریافت کاربر با شناسه</h3>
+
+    <pre><code>const id = Number(req.params.id);
+
+const user = await userRepository.findOneBy({ id });</code></pre>
+
+    <p>
+      مقدار <code>req.params.id</code> در ابتدا رشته است؛ بنابراین
+      آن را به عدد تبدیل و اعتبارسنجی می‌کنیم.
+    </p>
+
+    <p>
+      اگر کاربر پیدا نشود، پاسخ مناسب
+      <code>404 Not Found</code> است.
+    </p>
+
+    <h3>ویرایش کاربر</h3>
+
+    <pre><code>userRepository.merge(user, result.data);
+
+const updatedUser =
+  await userRepository.save(user);</code></pre>
+
+    <p>
+      <code>merge()</code> داده‌های جدید را با Entity موجود ادغام
+      می‌کند و <code>save()</code> تغییرات را ذخیره می‌کند.
+      در PATCH می‌توان فقط فیلدهایی را که می‌خواهیم تغییر کنند فرستاد.
+    </p>
+  </section>
+
+  <section>
+    <h2>۶. Route چیست؟</h2>
+
+    <p>
+      Route مشخص می‌کند درخواست با چه متد HTTP و چه آدرسی
+      به کدام کنترلر برسد.
+    </p>
+
+    <p>
+      فایل:
+      <code>src/routes/index.ts</code>
+    </p>
+
+    <pre><code>apiRouter.get("/users", getUsers);
+apiRouter.post("/users", createUser);
+apiRouter.get("/users/:id", getUserById);
+apiRouter.patch("/users/:id", updateUser);</code></pre>
+
+    <p>
+      چون Router با پیشوند <code>/api/v1</code> ثبت شده،
+      آدرس <code>/users</code> به
+      <code>/api/v1/users</code> تبدیل می‌شود.
+    </p>
+
+    <h3>تفاوت Route و Controller</h3>
+
+    <ul>
+      <li>Route مسیر رسیدن درخواست به تابع را مشخص می‌کند.</li>
+      <li>Controller منطق مربوط به درخواست را اجرا می‌کند.</li>
+    </ul>
+
+    <h3>Middleware مربوط به JSON</h3>
+
+    <pre><code>app.use(express.json());</code></pre>
+
+    <p>
+      این Middleware باید پیش از Routeهای API ثبت شده باشد تا
+      JSON درخواست در <code>req.body</code> در دسترس قرار بگیرد.
+    </p>
+  </section>
+
+  <section>
+    <h2>۷. APIهای فعلی پروژه</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>متد</th>
+          <th>مسیر</th>
+          <th>کاربرد</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GET</td>
+          <td><code>/api/v1/users</code></td>
+          <td>دریافت همه کاربران</td>
+        </tr>
+        <tr>
+          <td>POST</td>
+          <td><code>/api/v1/users</code></td>
+          <td>ساخت کاربر</td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td><code>/api/v1/users/:id</code></td>
+          <td>دریافت یک کاربر</td>
+        </tr>
+        <tr>
+          <td>PATCH</td>
+          <td><code>/api/v1/users/:id</code></td>
+          <td>ویرایش کاربر</td>
+        </tr>
+        <tr>
+          <td>DELETE</td>
+          <td><code>/api/v1/users/:id</code></td>
+          <td>هنوز ساخته نشده است</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>۸. نمونه درخواست‌ها</h2>
+
+    <h3>ساخت کاربر با Postman یا Thunder Client</h3>
+
+    <pre><code>POST http://localhost:3000/api/v1/users
+
+Content-Type: application/json
+
+{
+  "name": "Ali",
+  "email": "ali@example.com"
+}</code></pre>
+
+    <h3>دریافت کاربران</h3>
+
+    <pre><code>GET http://localhost:3000/api/v1/users</code></pre>
+
+    <h3>دریافت یک کاربر</h3>
+
+    <pre><code>GET http://localhost:3000/api/v1/users/1</code></pre>
+
+    <h3>ویرایش کاربر</h3>
+
+    <pre><code>PATCH http://localhost:3000/api/v1/users/1
+
+Content-Type: application/json
+
+{
+  "name": "Ali Reza"
+}</code></pre>
+  </section>
+
+  <section>
+    <h2>۹. کدهای وضعیت HTTP</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>کد</th>
+          <th>معنی</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>200</td>
+          <td>درخواست موفق</td>
+        </tr>
+        <tr>
+          <td>201</td>
+          <td>منبع جدید ساخته شد</td>
+        </tr>
+        <tr>
+          <td>400</td>
+          <td>ورودی نامعتبر است</td>
+        </tr>
+        <tr>
+          <td>404</td>
+          <td>منبع موردنظر پیدا نشد</td>
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>خطای داخلی سرور</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="warning">
+      خطاهایی مانند ایمیل تکراری باید با Error Middleware مدیریت شوند.
+      بهتر است جزئیات داخلی دیتابیس در پاسخ عمومی API افشا نشود.
+    </p>
+  </section>
+
+  <section>
+    <h2>۱۰. قدم بعدی پروژه</h2>
+
+    <ol>
+      <li>بررسی نتیجه تست PATCH.</li>
+      <li>ساخت API حذف کاربر با DELETE.</li>
+      <li>مدیریت استاندارد خطاهای دیتابیس.</li>
+      <li>طراحی Entity مقاله و رابطه آن با نویسنده.</li>
+    </ol>
+
+    <p class="success">
+      طبق قرارمان، پروژه را مرحله‌به‌مرحله ادامه می‌دهیم و فقط
+      زمانی کد یا فایل جدید می‌خواهیم که واقعاً لازم باشد.
+    </p>
+  </section>
+
+  <footer>
+    گزارش آموزشی پروژه بک‌اند مقالات
+  </footer>
+
+</div>
+</body>
+</html>

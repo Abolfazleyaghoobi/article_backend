@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>جزوه امروز — ساخت بک‌اند سایت مقاله</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #5c667a;
+      --paper: #ffffff;
+      --bg: #f2f5fa;
+      --line: #dce3ee;
+      --blue: #2457c5;
+      --blue-soft: #eaf0ff;
+      --green-soft: #e8f7ef;
+      --orange-soft: #fff3df;
+      --code: #111827;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Tahoma, "Vazirmatn", Arial, sans-serif;
+      line-height: 1.95;
+    }
+    .page { max-width: 1050px; margin: 0 auto; padding: 28px 18px 60px; }
+    header {
+      background: linear-gradient(135deg, #172b59, #2457c5);
+      color: #fff;
+      padding: 30px 28px;
+      border-radius: 20px;
+      margin-bottom: 22px;
+      box-shadow: 0 12px 28px #18356b20;
+    }
+    h1 { margin: 0 0 8px; font-size: clamp(1.6rem, 4vw, 2.3rem); line-height: 1.6; }
+    header p { margin: 0; color: #e3ebff; }
+    section, .callout {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      margin: 18px 0;
+      box-shadow: 0 5px 16px #1c2d4d08;
+    }
+    h2 { margin-top: 0; padding-bottom: 8px; border-bottom: 1px solid var(--line); font-size: 1.35rem; }
+    h3 { margin-bottom: 6px; font-size: 1.08rem; }
+    p, li { overflow-wrap: anywhere; }
+    code, pre, .ltr {
+      direction: ltr;
+      unicode-bidi: isolate;
+      text-align: left;
+      font-family: "DejaVu Sans Mono", Consolas, monospace;
+    }
+    code {
+      background: #edf1f7;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: .92em;
+    }
+    pre {
+      background: var(--code);
+      color: #f3f4f6;
+      padding: 16px;
+      border-radius: 12px;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.65;
+      font-size: .87rem;
+      direction: ltr;
+      text-align: left;
+    }
+    .tree { background: #f8fafc; color: #162033; border: 1px solid var(--line); }
+    .badge {
+      display: inline-block;
+      background: var(--blue-soft);
+      color: #173f9b;
+      padding: 2px 10px;
+      border-radius: 99px;
+      font-size: .85rem;
+      margin-inline-start: 5px;
+    }
+    .callout { border: 0; }
+    .success { background: var(--green-soft); }
+    .warning { background: var(--orange-soft); }
+    .muted { color: var(--muted); }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+    th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: right; vertical-align: top; }
+    th { background: #f3f6fb; }
+    .steps li { margin-bottom: 8px; }
+    footer { color: var(--muted); text-align: center; padding: 18px; font-size: .9rem; }
+    @media print {
+      body { background: #fff; }
+      .page { max-width: none; padding: 0; }
+      header, section, .callout { box-shadow: none; break-inside: avoid; }
+      pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>جزوه آموزشی امروز: ساخت بک‌اند سایت مقاله</h1>
+    <p>مرور مرحله‌به‌مرحله پروژه، ساختار پوشه‌ها، تنظیمات، اتصال دیتابیس، Migration و وضعیت ادامه کار</p>
+  </header>
+
+  <div class="callout success">
+    <strong>وضعیت امروز:</strong>
+    اتصال برنامه به MariaDB تأیید شد، مسیرهای اولیه API تست شدند و Migration جدول <code>users</code> با موفقیت اجرا شد.
+    <br>
+    <strong>نکته مهم:</strong> مسیر آزمایشی <code>GET /api/v1/users</code> پیشنهاد شده، اما هنوز تأیید نشده که تغییر آن را در فایل انجام داده‌ای.
+  </div>
+
+  <section>
+    <h2>۱. هدف پروژه</h2>
+    <p>در حال ساخت بک‌اند یک سایت مقاله و پنل مدیریت هستیم. فناوری‌های فعلی:</p>
+    <ul>
+      <li><strong>TypeScript:</strong> زبان برنامه‌نویسی با بررسی نوع داده‌ها.</li>
+      <li><strong>Express.js:</strong> دریافت درخواست‌های HTTP و تعریف مسیرهای API.</li>
+      <li><strong>TypeORM:</strong> ارتباط بین کلاس‌های TypeScript و جداول دیتابیس.</li>
+      <li><strong>MariaDB از طریق XAMPP:</strong> محل ذخیره‌سازی اطلاعات.</li>
+      <li><strong>REST API:</strong> راهی استاندارد برای ارتباط فرانت‌اند با بک‌اند.</li>
+      <li><strong>Migration:</strong> ثبت کنترل‌شده تغییرات ساختار دیتابیس.</li>
+    </ul>
+    <p>پیشوند API پروژه <code>/api/v1</code> است؛ یعنی مسیرهای نسخه اول API با این بخش شروع می‌شوند.</p>
+  </section>
+
+  <section>
+    <h2>۲. ساختار پوشه‌ها</h2>
+    <p>ساختار کلی‌ای که برای پروژه در نظر گرفته‌ایم:</p>
+    <pre class="tree">practiceNestjs/
+├── package.json
+├── package-lock.json
+├── tsconfig.json
+├── .env
+├── node_modules/
+├── tests/
+├── uploads/
+└── articles-backend/
+    ├── src/
+    │   ├── app.ts
+    │   ├── server.ts
+    │   ├── config/
+    │   │   ├── env.ts
+    │   │   └── app.config.ts
+    │   ├── database/
+    │   │   ├── data-source.ts
+    │   │   ├── migrations/
+    │   │   │   └── 1791791848214-CreateUsersTable.ts
+    │   │   └── seeds/
+    │   ├── common/
+    │   │   ├── middleware/
+    │   │   │   ├── error.middleware.ts
+    │   │   │   ├── not-found.middleware.ts
+    │   │   │   └── auth.middleware.ts
+    │   │   ├── errors/
+    │   │   │   └── app.error.ts
+    │   │   ├── utils/
+    │   │   └── types/
+    │   ├── modules/
+    │   │   ├── auth/
+    │   │   ├── users/
+    │   │   │   └── entities/
+    │   │   │       └── user.entity.ts
+    │   │   ├── articles/
+    │   │   ├── categories/
+    │   │   ├── tags/
+    │   │   ├── comments/
+    │   │   └── media/
+    │   ├── routes/
+    │   │   └── index.ts
+    │   └── docs/
+    │       └── openapi.yaml
+    └── dist/</pre>
+    <p class="muted">همه پوشه‌ها لزوماً در این مرحله پیاده‌سازی نشده‌اند؛ بعضی‌ها برای ساختار آینده پروژه در نظر گرفته شده‌اند.</p>
+    <h3>کار هر بخش چیست؟</h3>
+    <ul>
+      <li><code>app.ts</code>: ساخت Express app و ثبت middlewareها و مسیرها.</li>
+      <li><code>server.ts</code>: نقطه شروع برنامه؛ ابتدا دیتابیس را وصل می‌کند و سپس سرور را بالا می‌آورد.</li>
+      <li><code>config/</code>: تنظیمات برنامه و خواندن متغیرهای محیطی.</li>
+      <li><code>database/</code>: تنظیم اتصال دیتابیس، Migrationها و Seedها.</li>
+      <li><code>modules/</code>: قابلیت‌های اصلی مانند کاربران، مقاله‌ها، دسته‌بندی‌ها و نظرات.</li>
+      <li><code>common/</code>: کدهای مشترک مانند مدیریت خطاها و middlewareها.</li>
+      <li><code>routes/</code>: تعریف مسیرهای API.</li>
+      <li><code>uploads/</code>: محل احتمالی فایل‌های آپلودشده در آینده.</li>
+      <li><code>dist/</code>: خروجی کامپایل TypeScript؛ در زمان build ساخته می‌شود.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>۳. پکیج‌ها و فرمان‌های مهم</h2>
+    <p>پکیج‌های اصلی نصب‌شده شامل این موارد هستند:</p>
+    <pre>express
+cors
+helmet
+dotenv
+mysql2
+reflect-metadata
+typeorm
+tsx
+typescript</pre>
+    <p>در بررسی نسخه‌ها، خروجی نشان داد <code>typeorm@1.1.2</code> و <code>tsx@4.23.15</code> نصب هستند و <code>ts-node</code> نصب نیست.</p>
+    <h3>فرمان‌های استفاده‌شده</h3>
+    <table>
+      <thead><tr><th>فرمان</th><th>کاربرد</th></tr></thead>
+      <tbody>
+        <tr><td><code>npm run dev</code></td><td>اجرای سرور در حالت توسعه با <code>tsx watch</code>.</td></tr>
+        <tr><td><code>npx tsc --noEmit</code></td><td>بررسی خطاهای TypeScript بدون ساخت فایل خروجی.</td></tr>
+        <tr><td><code>npm ls typeorm ts-node ts-node-dev tsx</code></td><td>نمایش نسخه و وضعیت نصب این پکیج‌ها.</td></tr>
+        <tr><td><code>npx typeorm --version</code></td><td>بررسی نسخه‌ای که CLI نمایش می‌دهد.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>۴. تنظیمات TypeScript و package.json</h2>
+    <h3>اسکریپت‌های مورد انتظار در package.json</h3>
+    <pre>{
+  "type": "commonjs",
+  "scripts": {
+    "dev": "tsx watch articles-backend/src/server.ts",
+    "build": "tsc",
+    "start": "node articles-backend/dist/server.js",
+    "typecheck": "tsc --noEmit"
+  }
+}</pre>
+    <p class="muted">این قسمت فقط بخش مرتبط package.json را نشان می‌دهد؛ باقی تنظیمات و dependencies باید در فایل اصلی حفظ شوند.</p>
+    <h3>تنظیمات مورد انتظار tsconfig.json</h3>
+    <pre>{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "rootDir": "./articles-backend/src",
+    "outDir": "./articles-backend/dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true
+  },
+  "include": ["articles-backend/src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests"]
+}</pre>
+    <p>قبلاً مقدار <code>moduleResolution: "Node"</code> با نسخه TypeScript نصب‌شده سازگار نبود؛ آن را به <code>Node16</code> تغییر دادیم و <code>module</code> هم روی <code>Node16</code> قرار گرفت.</p>
+  </section>
+
+  <section>
+    <h2>۵. متغیرهای محیطی در .env</h2>
+    <p>فایل <code>.env</code> در ریشه پروژه قرار دارد، نه داخل پوشه <code>articles-backend</code>.</p>
+    <pre>NODE_ENV=development
+PORT=3000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=
+DB_DATABASE=articles_db</pre>
+    <ul>
+      <li><code>PORT</code>: پورتی که Express روی آن گوش می‌دهد.</li>
+      <li><code>DB_HOST</code> و <code>DB_PORT</code>: آدرس و پورت MariaDB.</li>
+      <li><code>DB_USERNAME</code> و <code>DB_PASSWORD</code>: مشخصات ورود به دیتابیس.</li>
+      <li><code>DB_DATABASE</code>: نام دیتابیس پروژه.</li>
+    </ul>
+    <div class="callout warning">
+      <strong>نکته امنیتی:</strong> فایل <code>.env</code> را در مخزن عمومی Git قرار نده. در تنظیمات فعلی، رمز خالی مجاز شده چون گفته شد حساب root در XAMPP رمز ندارد؛ این تنظیم را فقط مطابق وضعیت واقعی محیط خودت نگه دار.
+    </div>
+  </section>
+
+  <section>
+    <h2>۶. خواندن و اعتبارسنجی متغیرهای محیطی</h2>
+    <p>محتوای اصلی <code>articles-backend/src/config/env.ts</code>:</p>
+    <pre>import "dotenv/config";
+
+function getEnv(key: string, fallback?: string): string {
+  const value = process.env[key] ?? fallback;
+
+  if (value === undefined || value.trim() === "") {
+    throw new Error(`Missing required environment variable: ${key}`);
+  }
+
+  return value;
+}
+
+function getNumberEnv(key: string, fallback: number): number {
+  const value = Number(getEnv(key, String(fallback)));
+
+  if (!Number.isInteger(value) || value <= 0) {
+    throw new Error(
+      `Environment variable ${key} must be a positive integer`
+    );
+  }
+
+  return value;
+}
+
+export const env = {
+  NODE_ENV: getEnv("NODE_ENV", "development"),
+  PORT: getNumberEnv("PORT", 3000),
+
+  DB_HOST: getEnv("DB_HOST", "localhost"),
+  DB_PORT: getNumberEnv("DB_PORT", 3306),
+  DB_USERNAME: getEnv("DB_USERNAME"),
+  DB_PASSWORD: process.env.DB_PASSWORD ?? "",
+  DB_DATABASE: getEnv("DB_DATABASE"),
+};</pre>
+    <p>این کد فایل محیطی را بارگذاری می‌کند، مقادیر ضروری را بررسی می‌کند و پورت‌ها را به عدد مثبت تبدیل می‌کند. رمز دیتابیس می‌تواند رشته خالی باشد.</p>
+  </section>
+
+  <section>
+    <h2>۷. تنظیمات برنامه و اتصال دیتابیس</h2>
+    <h3>app.config.ts</h3>
+    <pre>export const appConfig = {
+  name: "Articles Backend",
+  apiPrefix: "/api/v1",
+};</pre>
+    <h3>data-source.ts</h3>
+    <pre>import "reflect-metadata";
+import { DataSource } from "typeorm";
+import { env } from "../config/env";
+import { User } from "../modules/users/entities/user.entity";
+
+export const AppDataSource = new DataSource({
+  type: "mysql",
+  host: env.DB_HOST,
+  port: env.DB_PORT,
+  username: env.DB_USERNAME,
+  password: env.DB_PASSWORD,
+  database: env.DB_DATABASE,
+
+  entities: [User],
+  migrations: ["articles-backend/src/database/migrations/*.ts"],
+
+  synchronize: false,
+  logging: false,
+});</pre>
+    <p><strong>چرا <code>type: "mysql"</code>؟</strong> در این پروژه از درایور <code>mysql2</code> استفاده می‌کنیم که با MariaDB در XAMPP سازگار است.</p>
+    <p><strong>چرا <code>synchronize: false</code>؟</strong> تا TypeORM خودش به‌صورت خودکار ساختار دیتابیس را تغییر ندهد. تغییرات را با Migrationها کنترل می‌کنیم.</p>
+  </section>
+
+  <section>
+    <h2>۸. موجودیت User</h2>
+    <p>فایل <code>articles-backend/src/modules/users/entities/user.entity.ts</code> کلاس TypeScript متناظر با جدول <code>users</code> است.</p>
+    <pre>import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
+
+@Entity({ name: "users" })
+export class User {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column({ type: "varchar", length: 100 })
+  name!: string;
+
+  @Column({ type: "varchar", length: 150, unique: true })
+  email!: string;
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
+}</pre>
+    <table>
+      <thead><tr><th>ستون</th><th>معنی</th></tr></thead>
+      <tbody>
+        <tr><td><code>id</code></td><td>شناسه اصلی و افزایشی هر کاربر.</td></tr>
+        <tr><td><code>name</code></td><td>نام کاربر؛ حداکثر ۱۰۰ کاراکتر.</td></tr>
+        <tr><td><code>email</code></td><td>ایمیل؛ حداکثر ۱۵۰ کاراکتر و یکتا.</td></tr>
+        <tr><td><code>createdAt</code></td><td>زمان ساخته‌شدن رکورد که TypeORM مدیریت می‌کند.</td></tr>
+        <tr><td><code>updatedAt</code></td><td>زمان آخرین تغییر رکورد که TypeORM مدیریت می‌کند.</td></tr>
+      </tbody>
+    </table>
+    <p>وقتی می‌گوییم <code>email</code> یکتا است، یعنی دیتابیس اجازه نمی‌دهد دو کاربر ایمیل یکسان داشته باشند.</p>
+  </section>
+
+  <section>
+    <h2>۹. ساختار Express و مسیرهای API</h2>
+    <h3>server.ts</h3>
+    <pre>import "reflect-metadata";
+import app from "./app";
+import { env } from "./config/env";
+import { AppDataSource } from "./database/data-source";
+
+async function bootstrap() {
+  try {
+    await AppDataSource.initialize();
+
+    console.log("Database connected successfully ✅");
+
+    app.listen(env.PORT, () => {
+      console.log(
+        `Server is running on http://localhost:${env.PORT}`,
+      );
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+}
+
+bootstrap();</pre>
+    <p>ترتیب مهم است: ابتدا اتصال دیتابیس برقرار می‌شود؛ سپس سرور HTTP اجرا می‌شود. اگر اتصال دیتابیس شکست بخورد، برنامه با خطا متوقف می‌شود.</p>
+
+    <h3>app.ts</h3>
+    <pre>import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import { appConfig } from "./config/app.config";
+import { apiRouter } from "./routes";
+import { errorMiddleware } from "./common/middleware/error.middleware";
+import { notFoundMiddleware } from "./common/middleware/not-found.middleware";
+
+const app = express();
+
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
+
+app.get("/", (_req, res) => {
+  res.send(`${appConfig.name} API is running 🚀`);
+});
+
+app.use(appConfig.apiPrefix, apiRouter);
+
+app.use(notFoundMiddleware);
+app.use(errorMiddleware);
+
+export default app;</pre>
+    <p><code>helmet()</code> تعدادی هدر امنیتی HTTP را تنظیم می‌کند؛ <code>cors()</code> تنظیمات اشتراک درخواست بین مبدأها را اعمال می‌کند؛ <code>express.json()</code> بدنه JSON درخواست‌ها را می‌خواند.</p>
+
+    <h3>routes/index.ts — وضعیت فعلی تأییدنشده</h3>
+    <p>کد قبلی مسیر پایه API این بود:</p>
+    <pre>import { Router } from "express";
+
+export const apiRouter = Router();
+
+apiRouter.get("/", (_req, res) => {
+  res.json({
+    success: true,
+    message: "Articles API is running 🚀",
+  });
+});</pre>
+    <p>در پایان جلسه پیشنهاد شد مسیر آزمایشی زیر هم به همین فایل اضافه شود؛ هنوز تأیید نشده که این تغییر انجام شده باشد:</p>
+    <pre>apiRouter.get("/users", (_req, res) => {
+  res.json({
+    success: true,
+    message: "Users API is running 🚀",
+  });
+});</pre>
+    <p>با توجه به ثبت router زیر پیشوند <code>/api/v1</code>، آدرس این مسیر <code>GET /api/v1/users</code> خواهد بود. فعلاً پاسخ آزمایشی است و از دیتابیس اطلاعاتی نمی‌خواند.</p>
+  </section>
+
+  <section>
+    <h2>۱۰. مدیریت خطاها</h2>
+    <h3>app.error.ts</h3>
+    <pre>export class AppError extends Error {
+  constructor(
+    message: string,
+    public readonly statusCode: number = 500,
+  ) {
+    super(message);
+
+    this.name = "AppError";
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}</pre>
+    <p><code>AppError</code> خطایی سفارشی است که همراه پیام، کد وضعیت HTTP را نگه می‌دارد.</p>
+    <h3>not-found.middleware.ts</h3>
+    <pre>import type { RequestHandler } from "express";
+import { AppError } from "../errors/app.error";
+
+export const notFoundMiddleware: RequestHandler = (
+  _req,
+  _res,
+  next,
+) => {
+  next(new AppError("مسیر موردنظر پیدا نشد", 404));
+};</pre>
+    <h3>error.middleware.ts</h3>
+    <pre>import type { ErrorRequestHandler } from "express";
+import { AppError } from "../errors/app.error";
+
+export const errorMiddleware: ErrorRequestHandler = (
+  err,
+  _req,
+  res,
+  _next,
+) => {
+  if (err instanceof AppError) {
+    res.status(err.statusCode).json({
+      success: false,
+      message: err.message,
+    });
+    return;
+  }
+
+  console.error(err);
+
+  res.status(500).json({
+    success: false,
+    message: "خطای داخلی سرور",
+  });
+};</pre>
+    <p>ترتیب middlewareها مهم است: ابتدا مسیرهای برنامه، سپس middleware مسیر پیدا نشد، و در آخر middleware مدیریت خطا ثبت شده‌اند.</p>
+  </section>
+
+  <section>
+    <h2>۱۱. Migration چیست و چه اتفاقی افتاد؟</h2>
+    <p>Migration فایلی است که تغییر ساختار دیتابیس را به‌شکل نسخه‌بندی‌شده ثبت می‌کند. به‌جای تغییر خودکار دیتابیس، تغییرها را صریح و قابل پیگیری اجرا می‌کنیم.</p>
+    <h3>فرمان تولید Migration</h3>
+    <pre>npx tsx ./node_modules/typeorm/cli.js migration:generate articles-backend/src/database/migrations/CreateUsersTable -d articles-backend/src/database/data-source.ts</pre>
+    <p>فایل زیر با موفقیت تولید شد:</p>
+    <pre>articles-backend/src/database/migrations/1791791848214-CreateUsersTable.ts</pre>
+    <h3>خلاصه SQL ساخته‌شده</h3>
+    <pre>CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
+    ON UPDATE CURRENT_TIMESTAMP(6),
+  UNIQUE INDEX `IDX_97672ac88f789774dd47f7c8be` (`email`),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB</pre>
+    <p>متد <code>up()</code> تغییر را اعمال می‌کند و متد <code>down()</code> برای برگرداندن تغییر نوشته می‌شود. قبل از اجرای Migration باید محتوای آن بررسی شود.</p>
+    <h3>فرمان اجرای Migration</h3>
+    <pre>npx tsx ./node_modules/typeorm/cli.js migration:run -d articles-backend/src/database/data-source.ts</pre>
+    <div class="callout success">
+      <strong>نتیجه واقعی:</strong> فرمان موفق شد. خروجی اعلام کرد:
+      <pre>0 migrations are already loaded in the database.
+1 migrations were found in the source code.
+1 migrations are new migrations must be executed.
+Migration CreateUsersTable1791791848214 has been executed successfully.
+COMMIT</pre>
+      یعنی جدول <code>users</code> ساخته شد و اجرای Migration در جدول داخلی <code>migrations</code> ثبت شد.
+    </div>
+    <p>پس از اجرا، بررسی در phpMyAdmin پیشنهاد شد تا وجود جدول‌های <code>users</code> و <code>migrations</code> تأیید شود؛ کاربر اعلام کرد بررسی انجام شده است.</p>
+  </section>
+
+  <section>
+    <h2>۱۲. خطای CLI و راه‌حلی که استفاده شد</h2>
+    <p>فرمان معمول <code>npx typeorm migration:show -d ...</code> خطای زیر داد:</p>
+    <pre>Cannot use import statement outside a module</pre>
+    <p>علت این بود که CLI فایل TypeScript را با روش بارگذاری فعلی پروژه درست باز نمی‌کرد. سپس <code>typeorm-ts-node-commonjs</code> امتحان شد، اما چون <code>ts-node</code> نصب نبود، خطای <code>Cannot find module 'ts-node'</code> رخ داد.</p>
+    <p>در نهایت اجرای CLI با <code>tsx</code> استفاده شد:</p>
+    <pre>npx tsx ./node_modules/typeorm/cli.js migration:show -d articles-backend/src/database/data-source.ts</pre>
+    <p>این دستور بدون خروجی و با کد خروجی صفر تمام شد. سپس فرمان <code>migration:generate</code> و فرمان <code>migration:run</code> با همین روش موفق شدند.</p>
+    <div class="callout warning">
+      برای اجرای فرمان‌های Migration در آینده از همان روش موفق استفاده کن، اما قبل از هر Migration تغییردهنده، فایل تولیدشده را بازبینی کن. همچنین مسیرهای فایل و تنظیمات TypeORM را در صورت تغییر محیط دوباره بررسی کن.
+    </div>
+  </section>
+
+  <section>
+    <h2>۱۳. آدرس‌هایی که تست کردیم</h2>
+    <table>
+      <thead><tr><th>آدرس</th><th>نتیجه مورد انتظار</th></tr></thead>
+      <tbody>
+        <tr><td><code>http://localhost:3000/</code></td><td><code>Articles Backend API is running 🚀</code></td></tr>
+        <tr><td><code>http://localhost:3000/api/v1</code></td><td>JSON با <code>success: true</code> و پیام اجرای API.</td></tr>
+        <tr><td><code>http://localhost:3000/api/v1/test</code></td><td>خطای 404 و پیام «مسیرموردنظر پیدا نشد».</td></tr>
+      </tbody>
+    </table>
+    <p>کاربر اعلام کرد این تست‌ها انجام شده‌اند. مسیر <code>/api/v1/users</code> هنوز در انتظار افزودن/تأیید است.</p>
+  </section>
+
+  <section>
+    <h2>۱۴. چک‌لیست پایان جلسه</h2>
+    <ul class="steps">
+      <li>☑️ ساختار کلی پوشه‌های بک‌اند آماده شده است.</li>
+      <li>☑️ تنظیمات محیطی و تنظیمات برنامه تعریف شده‌اند.</li>
+      <li>☑️ موجودیت <code>User</code> تعریف و در DataSource ثبت شده است.</li>
+      <li>☑️ اتصال MariaDB از طریق XAMPP تأیید شده است.</li>
+      <li>☑️ مسیر اصلی API و مدیریت 404 تست شده‌اند.</li>
+      <li>☑️ Migration جدول <code>users</code> تولید و با موفقیت اجرا شده است.</li>
+      <li>☐ مسیر آزمایشی <code>GET /api/v1/users</code> باید اضافه یا وضعیتش تأیید شود.</li>
+      <li>☐ در مرحله بعد، مسیر کاربران باید به‌جای پاسخ ثابت، از دیتابیس اطلاعات بخواند.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>۱۵. نقطه شروع جلسه بعد</h2>
+    <ol class="steps">
+      <li>فایل <code>articles-backend/src/routes/index.ts</code> را باز کن.</li>
+      <li>بررسی کن آیا مسیر آزمایشی <code>GET /users</code> اضافه شده است یا نه.</li>
+      <li>پس از تأیید وضعیت فایل، مرحله بعدی را شروع می‌کنیم: خواندن کاربران از دیتابیس با Repository مربوط به TypeORM.</li>
+    </ol>
+    <p><strong>فعلاً لازم نیست مرحله بعد را از قبل انجام بدهی.</strong> طبق روش قدم‌به‌قدم، ابتدا وضعیت فایل را بررسی می‌کنیم و بعد ادامه می‌دهیم.</p>
+  </section>
+
+  <footer>
+    جزوه پروژه Articles Backend — راست‌چین، مناسب مطالعه در مرورگر و چاپ
+  </footer>
+</div>
+</body>
+</html>
