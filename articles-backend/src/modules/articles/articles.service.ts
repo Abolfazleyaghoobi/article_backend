@@ -29,16 +29,28 @@ export const getAllArticles = async (
   page = 1,
   limit = 10,
   status?: "draft" | "published",
+  search?: string,
 ) => {
   const safePage = Math.max(1, Math.floor(page));
   const safeLimit = Math.min(50, Math.max(1, Math.floor(limit)));
 
-  const [articles, total] = await articleRepository.findAndCount({
-    where: status ? { status } : {},
-    order: { createdAt: "DESC" },
-    skip: (safePage - 1) * safeLimit,
-    take: safeLimit,
-  });
+  const query = articleRepository
+    .createQueryBuilder("article")
+    .orderBy("article.createdAt", "DESC")
+    .skip((safePage - 1) * safeLimit)
+    .take(safeLimit);
+
+  if (status) {
+    query.andWhere("article.status = :status", { status });
+  }
+
+  if (search?.trim()) {
+    query.andWhere("article.title LIKE :search", {
+      search: `%${search.trim()}%`,
+    });
+  }
+
+  const [articles, total] = await query.getManyAndCount();
 
   return {
     data: articles,

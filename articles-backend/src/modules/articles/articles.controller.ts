@@ -43,6 +43,7 @@ export const getAllArticlesController = async (
     const page = Number(req.query.page ?? 1);
     const limit = Number(req.query.limit ?? 10);
     const statusValue = req.query.status;
+    const searchValue = req.query.search;
 
     if (
       !Number.isInteger(page) ||
@@ -64,12 +65,29 @@ export const getAllArticlesController = async (
       throw new AppError("وضعیت مقاله معتبر نیست", 400);
     }
 
+    if (
+      searchValue !== undefined &&
+      typeof searchValue !== "string"
+    ) {
+      throw new AppError("عبارت جست‌وجو معتبر نیست", 400);
+    }
+
     const status =
       statusValue === "draft" || statusValue === "published"
         ? statusValue
         : undefined;
 
-    const result = await getAllArticles(page, limit, status);
+    const search =
+      typeof searchValue === "string"
+        ? searchValue.trim()
+        : undefined;
+
+    const result = await getAllArticles(
+      page,
+      limit,
+      status,
+      search,
+    );
 
     res.status(200).json({
       success: true,
