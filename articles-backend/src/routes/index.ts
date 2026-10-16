@@ -2,7 +2,8 @@
 import { Router } from "express";
 import { createUser, deleteUser, getUsers, updateUser } from "../modules/users/users.controller";
 import { getUserById } from "../modules/users/users.controller";
-
+// auth routes
+import authRouter from "../modules/auth/auth.routes";
 // articles import
 import articlesRouter from "../modules/articles/articles.routes";
 
@@ -26,3 +27,7 @@ apiRouter.delete("/users/:id", deleteUser);
 // articles routes
 
 apiRouter.use("/articles", articlesRouter);
+
+
+// auth routes
+apiRouter.use("/auth", authRouter);
