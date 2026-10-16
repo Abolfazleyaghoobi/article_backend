@@ -1,0 +1,703 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>جزوه آموزشی بک‌اند مقالات</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f3f5fa;
+      color: #20283a;
+      font-family: Tahoma, Arial, sans-serif;
+      line-height: 2;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #172554, #3157c8);
+      color: white;
+      padding: 30px;
+      border-radius: 18px;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      margin-top: 0;
+    }
+
+    section {
+      background: white;
+      border: 1px solid #dfe4ee;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      color: #2447a8;
+      border-bottom: 2px solid #e5eaff;
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      color: #344054;
+    }
+
+    code {
+      direction: ltr;
+      unicode-bidi: embed;
+      display: inline-block;
+      background: #edf1ff;
+      color: #2447a8;
+      padding: 1px 6px;
+      border-radius: 5px;
+      font-family: Consolas, monospace;
+    }
+
+    pre {
+      direction: ltr;
+      text-align: left;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      background: #101827;
+      color: #e5e7eb;
+      padding: 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      line-height: 1.7;
+      font-family: Consolas, monospace;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    .note {
+      background: #eaf0ff;
+      border-right: 5px solid #3157c8;
+      padding: 14px;
+      margin: 15px 0;
+      border-radius: 8px;
+    }
+
+    .warning {
+      background: #fff2df;
+      border-right: 5px solid #d58a22;
+      padding: 14px;
+      margin: 15px 0;
+      border-radius: 8px;
+    }
+
+    .success {
+      background: #e8f7f0;
+      border-right: 5px solid #16845b;
+      padding: 14px;
+      margin: 15px 0;
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+
+    th, td {
+      border: 1px solid #dfe4ee;
+      padding: 10px;
+      text-align: right;
+      vertical-align: top;
+    }
+
+    th {
+      background: #edf1ff;
+    }
+
+    a {
+      color: #3157c8;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .method {
+      direction: ltr;
+      display: inline-block;
+      font-weight: bold;
+    }
+
+    .get { color: #16845b; }
+    .post { color: #3157c8; }
+    .patch { color: #b36b00; }
+    .delete { color: #bd3030; }
+
+    footer {
+      text-align: center;
+      color: #667085;
+      padding: 20px;
+    }
+
+    @media (max-width: 650px) {
+      .container {
+        padding: 10px;
+      }
+
+      section, header {
+        padding: 16px;
+      }
+
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .container {
+        max-width: 100%;
+        margin: 0;
+      }
+
+      section, header {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <header>
+    <h1>جزوه آموزشی بک‌اند سایت مقالات</h1>
+    <p>
+      مرور کارهای امروز؛ از ساخت API تا صفحه‌بندی، فیلتر و جست‌وجو
+    </p>
+    <p>
+      TypeScript | Express | TypeORM | MariaDB | REST API
+    </p>
+  </header>
+
+  <section>
+    <h2>۱. کارهایی که انجام دادیم</h2>
+
+    <ul>
+      <li>ساخت جدول کاربران با Migration</li>
+      <li>ساخت جدول مقالات و ارتباط آن با کاربران</li>
+      <li>ساخت APIهای CRUD کاربران</li>
+      <li>ساخت APIهای CRUD مقاله‌ها</li>
+      <li>اعتبارسنجی ورودی‌ها با Zod</li>
+      <li>مدیریت خطا با AppError و Error Middleware</li>
+      <li>جلوگیری از ثبت slug تکراری</li>
+      <li>صفحه‌بندی مقاله‌ها (Pagination)</li>
+      <li>فیلتر مقاله‌ها بر اساس وضعیت</li>
+      <li>جست‌وجو بر اساس عنوان مقاله</li>
+    </ul>
+
+    <div class="success">
+      هدف معماری این است که مسیرها، کنترلرها، سرویس‌ها و دسترسی به دیتابیس از هم جدا باشند.
+    </div>
+  </section>
+
+  <section>
+    <h2>۲. معماری پروژه</h2>
+
+    <pre>
+Client / Postman
+       |
+       v
+Express Route
+       |
+       v
+Controller
+       |
+       v
+Service
+       |
+       v
+Repository / TypeORM
+       |
+       v
+MariaDB
+    </pre>
+
+    <h3>وظیفه هر بخش</h3>
+
+    <ul>
+      <li><strong>Route:</strong> تعیین می‌کند هر درخواست به کدام کنترلر برود.</li>
+      <li><strong>Controller:</strong> ورودی HTTP را می‌خواند و پاسخ را برمی‌گرداند.</li>
+      <li><strong>Service:</strong> منطق اصلی برنامه را اجرا می‌کند.</li>
+      <li><strong>Repository:</strong> عملیات خواندن و نوشتن در دیتابیس را انجام می‌دهد.</li>
+      <li><strong>Entity:</strong> ساختار یک جدول و ارتباطات آن را تعریف می‌کند.</li>
+      <li><strong>Migration:</strong> تغییرات ساختار دیتابیس را مدیریت می‌کند.</li>
+      <li><strong>DTO:</strong> شکل داده‌ای را که بین بخش‌های برنامه منتقل می‌شود مشخص می‌کند.</li>
+      <li><strong>Zod:</strong> اعتبار ورودی واقعی را در زمان اجرا بررسی می‌کند.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>۳. ارتباط کاربران و مقاله‌ها</h2>
+
+    <pre>
+users
+-----
+id (Primary Key)
+name
+email
+
+       1
+       |
+       | یک کاربر می‌تواند چند مقاله داشته باشد
+       |
+       N
+
+articles
+--------
+id (Primary Key)
+title
+slug
+content
+status
+userId (Foreign Key)
+    </pre>
+
+    <p>
+      ستون <code>articles.userId</code> به ستون
+      <code>users.id</code> اشاره می‌کند.
+    </p>
+
+    <ul>
+      <li><code>Primary Key</code>: شناسه یکتای هر ردیف.</li>
+      <li><code>Foreign Key</code>: اتصال رکورد به رکورد معتبر در جدول دیگر.</li>
+      <li><code>ManyToOne</code>: چند مقاله می‌توانند یک نویسنده داشته باشند.</li>
+      <li><code>JoinColumn</code>: مشخص می‌کند ستون ارتباطی در دیتابیس کدام است.</li>
+    </ul>
+
+    <div class="warning">
+      اگر خطای
+      <code>ER_NO_REFERENCED_ROW_2</code>
+      دیدی، ممکن است userId فرستاده‌شده در جدول users وجود نداشته باشد.
+    </div>
+  </section>
+
+  <section>
+    <h2>۴. راهنمای APIهای کاربران</h2>
+
+    <p>آدرس پایه:</p>
+    <pre>http://localhost:3000/api/v1</pre>
+
+    <table>
+      <tr>
+        <th>متد</th>
+        <th>آدرس</th>
+        <th>کاربرد</th>
+      </tr>
+      <tr>
+        <td><span class="method get">GET</span></td>
+        <td><code>/users</code></td>
+        <td>دریافت همه کاربران</td>
+      </tr>
+      <tr>
+        <td><span class="method post">POST</span></td>
+        <td><code>/users</code></td>
+        <td>ساخت کاربر جدید</td>
+      </tr>
+      <tr>
+        <td><span class="method get">GET</span></td>
+        <td><code>/users/:id</code></td>
+        <td>دریافت یک کاربر با شناسه</td>
+      </tr>
+      <tr>
+        <td><span class="method patch">PATCH</span></td>
+        <td><code>/users/:id</code></td>
+        <td>ویرایش بخشی از کاربر</td>
+      </tr>
+      <tr>
+        <td><span class="method delete">DELETE</span></td>
+        <td><code>/users/:id</code></td>
+        <td>حذف کاربر</td>
+      </tr>
+    </table>
+
+    <h3>مثال: ویرایش کاربر</h3>
+
+    <pre>
+PATCH http://localhost:3000/api/v1/users/1
+
+{
+  "name": "Ali Reza"
+}
+    </pre>
+
+    <p>
+      چون از PATCH استفاده می‌کنیم، لازم نیست همه فیلدهای کاربر را ارسال کنیم.
+    </p>
+  </section>
+
+  <section>
+    <h2>۵. راهنمای APIهای مقاله‌ها</h2>
+
+    <table>
+      <tr>
+        <th>متد</th>
+        <th>آدرس</th>
+        <th>کاربرد</th>
+      </tr>
+      <tr>
+        <td><span class="method post">POST</span></td>
+        <td><code>/articles</code></td>
+        <td>ساخت مقاله</td>
+      </tr>
+      <tr>
+        <td><span class="method get">GET</span></td>
+        <td><code>/articles</code></td>
+        <td>دریافت فهرست مقاله‌ها</td>
+      </tr>
+      <tr>
+        <td><span class="method get">GET</span></td>
+        <td><code>/articles/:id</code></td>
+        <td>دریافت یک مقاله</td>
+      </tr>
+      <tr>
+        <td><span class="method patch">PATCH</span></td>
+        <td><code>/articles/:id</code></td>
+        <td>ویرایش مقاله</td>
+      </tr>
+      <tr>
+        <td><span class="method delete">DELETE</span></td>
+        <td><code>/articles/:id</code></td>
+        <td>حذف مقاله</td>
+      </tr>
+    </table>
+
+    <h3>ساخت مقاله</h3>
+
+    <p>در Postman بخش Body → raw → JSON را انتخاب کن.</p>
+
+    <pre>
+POST http://localhost:3000/api/v1/articles
+
+{
+  "title": "آموزش TypeScript",
+  "slug": "learn-typescript",
+  "content": "این اولین مقاله ماست.",
+  "status": "draft",
+  "userId": 1
+}
+    </pre>
+
+    <ul>
+      <li><code>title</code>: عنوان مقاله.</li>
+      <li><code>slug</code>: شناسه متنی مناسب URL که باید یکتا باشد.</li>
+      <li><code>content</code>: محتوای مقاله.</li>
+      <li><code>status</code>: وضعیت مقاله؛ draft یا published.</li>
+      <li><code>userId</code>: شناسه نویسنده موجود در جدول کاربران.</li>
+    </ul>
+
+    <h3>دریافت همه مقاله‌ها</h3>
+    <pre>GET http://localhost:3000/api/v1/articles</pre>
+
+    <h3>دریافت یک مقاله</h3>
+    <pre>GET http://localhost:3000/api/v1/articles/1</pre>
+
+    <h3>ویرایش مقاله</h3>
+    <pre>
+PATCH http://localhost:3000/api/v1/articles/1
+
+{
+  "title": "آموزش پیشرفته TypeScript"
+}
+    </pre>
+
+    <h3>حذف مقاله</h3>
+    <pre>DELETE http://localhost:3000/api/v1/articles/1</pre>
+
+    <div class="warning">
+      درخواست DELETE اطلاعات را واقعاً حذف می‌کند. برای آزمایش، مقاله‌ای را انتخاب کن که به آن نیاز نداری.
+    </div>
+  </section>
+
+  <section>
+    <h2>۶. صفحه‌بندی (Pagination)</h2>
+
+    <p>
+      وقتی تعداد مقاله‌ها زیاد باشد، بهتر است همه را در یک درخواست برنگردانیم.
+      صفحه‌بندی تعداد نتایج هر درخواست را محدود می‌کند.
+    </p>
+
+    <pre>
+GET /api/v1/articles?page=1&limit=5
+    </pre>
+
+    <ul>
+      <li><code>page</code>: شماره صفحه.</li>
+      <li><code>limit</code>: تعداد مقاله‌ها در هر صفحه.</li>
+      <li><code>skip</code>: تعداد ردیف‌هایی که از آن‌ها عبور می‌کنیم.</li>
+      <li><code>take</code>: تعداد ردیف‌هایی که می‌خواهیم دریافت کنیم.</li>
+      <li><code>total</code>: تعداد کل رکوردهای مطابق فیلتر.</li>
+      <li><code>totalPages</code>: تعداد کل صفحات.</li>
+    </ul>
+
+    <pre>
+skip = (page - 1) * limit
+    </pre>
+
+    <p>مثلاً برای صفحه ۳ و limit برابر ۱۰:</p>
+
+    <pre>
+skip = (3 - 1) * 10
+skip = 20
+    </pre>
+
+    <p>یعنی ۲۰ رکورد اول نادیده گرفته می‌شوند و حداکثر ۱۰ رکورد بعدی برمی‌گردند.</p>
+  </section>
+
+  <section>
+    <h2>۷. فیلتر مقاله‌ها بر اساس وضعیت</h2>
+
+    <h3>فقط مقاله‌های منتشرشده</h3>
+    <pre>GET /api/v1/articles?status=published</pre>
+
+    <h3>فقط پیش‌نویس‌ها</h3>
+    <pre>GET /api/v1/articles?status=draft</pre>
+
+    <p>
+      مقدار status باید یکی از دو مقدار مجاز باشد.
+      اگر مقدار نامعتبر ارسال شود، API باید خطای 400 برگرداند.
+    </p>
+
+    <div class="warning">
+      فیلتر وضعیت، مجوز دسترسی نیست. تا زمانی که احراز هویت و بررسی مجوز انجام نشده،
+      نباید پیش‌نویس‌های خصوصی را در اختیار کاربران عمومی قرار دهیم.
+    </div>
+  </section>
+
+  <section>
+    <h2>۸. جست‌وجوی مقاله بر اساس عنوان</h2>
+
+    <h3>جست‌وجوی TypeScript</h3>
+    <pre>GET /api/v1/articles?search=TypeScript</pre>
+
+    <h3>ترکیب جست‌وجو، فیلتر و صفحه‌بندی</h3>
+    <pre>GET /api/v1/articles?page=1&limit=5&status=published&search=TypeScript</pre>
+
+    <p>
+      سرویس با Query Builder شرط جست‌وجو را اضافه می‌کند.
+      مقدار جست‌وجو باید به شکل پارامتر bind شود، نه با چسباندن مستقیم ورودی کاربر به SQL.
+    </p>
+
+    <pre>
+if (search?.trim()) {
+  query.andWhere("article.title LIKE :search", {
+    search: `%${search.trim()}%`,
+  });
+}
+    </pre>
+
+    <div class="success">
+      مزیت Query Builder این است که می‌توانیم شرط‌های مختلف را به‌صورت مرحله‌ای بسازیم؛
+      مثلاً وضعیت، عنوان و صفحه‌بندی را با هم ترکیب کنیم.
+    </div>
+  </section>
+
+  <section>
+    <h2>۹. نکات کلیدی TypeScript و Express</h2>
+
+    <h3>DTO</h3>
+    <p>
+      DTO شکل داده‌ای را مشخص می‌کند که یک عملیات انتظار دارد.
+    </p>
+
+    <pre>
+export interface CreateArticleDto {
+  title: string;
+  slug: string;
+  content: string;
+  status?: "draft" | "published";
+  userId: number;
+}
+    </pre>
+
+    <h3>اختیاری بودن فیلد</h3>
+    <p>
+      علامت <code>?</code> یعنی فرستادن آن فیلد اجباری نیست.
+    </p>
+
+    <pre>
+status?: "draft" | "published";
+    </pre>
+
+    <h3>اعتبارسنجی با Zod</h3>
+    <p>
+      TypeScript هنگام کامپایل به بررسی نوع‌ها کمک می‌کند؛ اما JSON دریافتی از اینترنت
+      باید در زمان اجرا هم اعتبارسنجی شود.
+    </p>
+
+    <pre>
+export const updateArticleSchema = z.object({
+  title: z.string().trim().min(3).max(200).optional(),
+  slug: z.string().trim().min(3).max(250).optional(),
+  content: z.string().min(1).optional(),
+  status: z.enum(["draft", "published"]).optional(),
+});
+    </pre>
+
+    <h3>مدیریت خطا</h3>
+    <pre>
+try {
+  const article = await getArticleById(id);
+
+  res.status(200).json({
+    success: true,
+    data: article,
+  });
+} catch (error) {
+  next(error);
+}
+    </pre>
+
+    <p>
+      با <code>next(error)</code> خطا به Error Middleware ارسال می‌شود تا پاسخ خطا
+      به‌صورت متمرکز مدیریت شود.
+    </p>
+  </section>
+
+  <section>
+    <h2>۱۰. کدهای مهم HTTP</h2>
+
+    <table>
+      <tr>
+        <th>کد</th>
+        <th>معنی</th>
+      </tr>
+      <tr>
+        <td><code>200</code></td>
+        <td>درخواست موفق و پاسخ دارای محتوا.</td>
+      </tr>
+      <tr>
+        <td><code>201</code></td>
+        <td>منبع جدید ساخته شده است.</td>
+      </tr>
+      <tr>
+        <td><code>204</code></td>
+        <td>عملیات موفق است و بدنه پاسخ ندارد.</td>
+      </tr>
+      <tr>
+        <td><code>400</code></td>
+        <td>ورودی نامعتبر است.</td>
+      </tr>
+      <tr>
+        <td><code>404</code></td>
+        <td>منبع موردنظر پیدا نشده است.</td>
+      </tr>
+      <tr>
+        <td><code>409</code></td>
+        <td>تعارض؛ مانند ایمیل یا slug تکراری.</td>
+      </tr>
+      <tr>
+        <td><code>500</code></td>
+        <td>خطای غیرمنتظره سمت سرور.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>۱۱. خطاهایی که امروز بررسی کردیم</h2>
+
+    <h3>خطای Foreign Key</h3>
+    <pre>
+ER_NO_REFERENCED_ROW_2
+Cannot add or update a child row
+    </pre>
+
+    <p>
+      دلیل: مقاله به کاربری اشاره می‌کند که شناسه‌اش در جدول users وجود ندارد.
+      ابتدا این درخواست را بزن:
+    </p>
+
+    <pre>GET http://localhost:3000/api/v1/users</pre>
+
+    <h3>ایمیل تکراری</h3>
+    <p>
+      اگر ایمیل در دیتابیس یکتا باشد و دوباره استفاده شود، دیتابیس خطای
+      <code>ER_DUP_ENTRY</code> می‌دهد. این خطا باید به پاسخ مناسب مانند 409 تبدیل شود.
+    </p>
+
+    <h3>شناسه نامعتبر</h3>
+    <p>
+      قبل از جست‌وجوی رکورد، بررسی می‌کنیم شناسه عدد صحیح مثبت باشد.
+    </p>
+
+    <pre>
+const id = Number(req.params.id);
+
+if (!Number.isInteger(id) || id < 1) {
+  throw new AppError("شناسه معتبر نیست", 400);
+}
+    </pre>
+  </section>
+
+  <section>
+    <h2>۱۲. نکات امنیتی مهم</h2>
+
+    <div class="warning">
+      <strong>وضعیت فعلی:</strong>
+      احراز هویت و بررسی مالکیت مقاله‌ها هنوز کامل نشده است.
+      APIهای تغییر و حذف را فعلاً عمومی نکن.
+    </div>
+
+    <ul>
+      <li>هنگام ساخت مقاله، در نسخه نهایی userId باید از هویت کاربر احراز هویت‌شده گرفته شود.</li>
+      <li>قبل از ویرایش یا حذف مقاله، مجوز کاربر برای همان مقاله بررسی شود.</li>
+      <li>پیش‌نویس‌ها نباید بدون مجوز در اختیار کاربران عمومی قرار بگیرند.</li>
+      <li>ورودی‌ها باید با Zod اعتبارسنجی شوند.</li>
+      <li>برای جست‌وجوی دیتابیس از پارامترهای امن استفاده شود.</li>
+      <li>جزئیات داخلی SQL و خطاهای حساس به کاربر عمومی نمایش داده نشوند.</li>
+      <li>برای محیط واقعی، محدودیت نرخ درخواست و مدیریت امن تنظیمات محرمانه را در نظر بگیر.</li>
+      <li>قبل از اجرای Migration روی دیتابیس مهم، تنظیمات اتصال را بررسی کن.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>۱۳. برنامه ادامه پروژه</h2>
+
+    <ol>
+      <li>تست نهایی جست‌وجو با <code>search=TypeScript</code>.</li>
+      <li>تست فیلتر با <code>status=published</code> و <code>status=draft</code>.</li>
+      <li>تست ترکیبی صفحه‌بندی، فیلتر و جست‌وجو.</li>
+      <li>بررسی خروجی‌ها و رفع خطاهای احتمالی.</li>
+      <li>پیاده‌سازی احراز هویت و بررسی مالکیت مقاله‌ها.</li>
+    </ol>
+
+    <div class="success">
+      کلمه کلیدی ادامه پروژه: <strong>هورا</strong><br>
+      با گفتن «هورا»، کار را از آخرین مرحله متوقف‌شده ادامه می‌دهیم.
+    </div>
+  </section>
+
+  <footer>
+    جزوه آموزشی بک‌اند مقالات — برای ذخیره PDF از گزینه Print مرورگر استفاده کن.
+  </footer>
+
+</div>
+</body>
+</html>
