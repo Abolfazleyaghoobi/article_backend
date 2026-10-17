@@ -1,7 +1,14 @@
+
 export interface CreateArticleDto {
   title: string;
   slug: string;
   content: string;
   status?: "draft" | "published";
-  userId: number;
+}
+
+export interface UpdateArticleDto {
+  title?: string;
+  slug?: string;
+  content?: string;
+  status?: "draft" | "published";
 }

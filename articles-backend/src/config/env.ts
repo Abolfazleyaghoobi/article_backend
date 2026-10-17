@@ -15,10 +15,20 @@ function getNumberEnv(key: string, fallback: number): number {
   const value = Number(getEnv(key, String(fallback)));
 
   if (!Number.isInteger(value) || value <= 0) {
-    throw new Error(`Environment variable ${key} must be a positive integer`);
+    throw new Error(
+      `Environment variable ${key} must be a positive integer`,
+    );
   }
 
   return value;
+}
+
+const jwtSecret = getEnv("JWT_SECRET");
+
+if (Buffer.byteLength(jwtSecret, "utf8") < 32) {
+  throw new Error(
+    "JWT_SECRET must contain at least 32 bytes",
+  );
 }
 
 export const env = {
@@ -28,6 +38,8 @@ export const env = {
   DB_HOST: getEnv("DB_HOST", "localhost"),
   DB_PORT: getNumberEnv("DB_PORT", 3306),
   DB_USERNAME: getEnv("DB_USERNAME"),
- DB_PASSWORD: process.env.DB_PASSWORD ?? "",
+  DB_PASSWORD: process.env.DB_PASSWORD ?? "",
   DB_DATABASE: getEnv("DB_DATABASE"),
+
+  JWT_SECRET: jwtSecret,
 };

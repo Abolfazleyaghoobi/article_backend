@@ -2,7 +2,8 @@
 import bcrypt from "bcrypt";
 import { AppDataSource } from "../../database/data-source";
 import { User } from "../users/entities/user.entity";
-import type { RegisterDto,LoginDto } from "./auth.dto";
+import type { RegisterDto, LoginDto } from "./auth.dto";
+import { signAccessToken } from "./jwt.service";
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -40,14 +41,10 @@ export async function registerUser(data: RegisterDto) {
   };
 }
 
-
-
-
 export async function loginUser(data: LoginDto) {
   const email = data.email.trim().toLowerCase();
 
-  // چون passwordHash در Entity دارای select: false است،
-  // باید آن را صریحاً از دیتابیس درخواست کنیم.
+  // passwordHash به دلیل select: false باید صریحاً انتخاب شود.
   const user = await userRepository
     .createQueryBuilder("user")
     .addSelect("user.passwordHash")
@@ -67,10 +64,17 @@ export async function loginUser(data: LoginDto) {
     throw new Error("ایمیل یا رمز عبور اشتباه است");
   }
 
+  const accessToken = signAccessToken(user.id);
+
   return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    createdAt: user.createdAt,
+    accessToken,
+    tokenType: "Bearer",
+    expiresIn: 3600,
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+    },
   };
 }

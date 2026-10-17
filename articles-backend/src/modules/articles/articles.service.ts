@@ -1,9 +1,13 @@
 import { articleRepository } from "./articles.repository";
-import type { CreateArticleDto } from "./articles.dto";
+import type { CreateArticleDto,UpdateArticleDto } from "./articles.dto";
 import { AppError } from "../../common/errors/app.error";
 
 // create a new article
-export const createArticle = async (data: CreateArticleDto) => {
+
+export const createArticle = async (
+  data: CreateArticleDto,
+  userId: number,
+) => {
   const existingArticle = await articleRepository.findOneBy({
     slug: data.slug,
   });
@@ -17,11 +21,12 @@ export const createArticle = async (data: CreateArticleDto) => {
     slug: data.slug,
     content: data.content,
     status: data.status ?? "draft",
-    userId: data.userId,
+    userId,
   });
 
   return articleRepository.save(article);
 };
+
 
 // get all articles
 
@@ -74,11 +79,17 @@ export const getArticleById = async (id: number) => {
 };
 
 // update article by id
+
 export const updateArticle = async (
   id: number,
-  data: Partial<CreateArticleDto>,
+  data: UpdateArticleDto,
+  userId: number,
 ) => {
   const article = await getArticleById(id);
+
+  if (article.userId !== userId) {
+    throw new AppError("شما اجازه ویرایش این مقاله را ندارید", 403);
+  }
 
   if (data.slug && data.slug !== article.slug) {
     const existingArticle = await articleRepository.findOneBy({
@@ -101,8 +112,16 @@ export const updateArticle = async (
 };
 
 // delete article by id
-export const deleteArticle = async (id: number) => {
+
+export const deleteArticle = async (
+  id: number,
+  userId: number,
+) => {
   const article = await getArticleById(id);
+
+  if (article.userId !== userId) {
+    throw new AppError("شما اجازه حذف این مقاله را ندارید", 403);
+  }
 
   await articleRepository.remove(article);
 };

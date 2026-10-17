@@ -22,7 +22,8 @@ export const createArticleController = async (
 ) => {
   try {
     const data = createArticleSchema.parse(req.body);
-    const article = await createArticle(data);
+  const userId = res.locals.userId as number;
+const article = await createArticle(data, userId);
 
     res.status(201).json({
       success: true,
@@ -135,7 +136,8 @@ export const updateArticleController = async (
     }
 
     const data = updateArticleSchema.parse(req.body);
-    const article = await updateArticle(id, data);
+   const userId = res.locals.userId as number;
+const article = await updateArticle(id, data, userId);
 
     res.status(200).json({
       success: true,
@@ -159,7 +161,8 @@ export const deleteArticleController = async (
       throw new AppError("شناسه مقاله معتبر نیست", 400);
     }
 
-    await deleteArticle(id);
+   const userId = res.locals.userId as number;
+await deleteArticle(id, userId);
 
     res.status(204).send();
   } catch (error) {

@@ -5,7 +5,6 @@ export const createArticleSchema = z.object({
   slug: z.string().trim().min(3).max(250),
   content: z.string().min(1),
   status: z.enum(["draft", "published"]).optional(),
-  userId: z.number().int().positive(),
 });
 
 
