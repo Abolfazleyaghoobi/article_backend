@@ -1,6 +1,10 @@
 
 import { Router } from "express";
-import { authenticate } from "../../common/middleware/auth.middleware";
+import {
+  authenticate,
+  optionalAuthenticate,
+} from "../../common/middleware/auth.middleware";
+
 import {
   createArticleController,
   deleteArticleController,
@@ -9,11 +13,14 @@ import {
   updateArticleController,
 } from "./articles.controller";
 
+
+
+
 const router = Router();
 
 // Public routes
-router.get("/", getAllArticlesController);
-router.get("/:id", getArticleByIdController);
+router.get("/", optionalAuthenticate, getAllArticlesController);
+router.get("/:id", optionalAuthenticate, getArticleByIdController);
 
 // Protected routes
 router.post("/", authenticate, createArticleController);

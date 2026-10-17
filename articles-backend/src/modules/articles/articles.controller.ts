@@ -83,12 +83,15 @@ export const getAllArticlesController = async (
         ? searchValue.trim()
         : undefined;
 
-    const result = await getAllArticles(
-      page,
-      limit,
-      status,
-      search,
-    );
+   const userId = res.locals.userId as number | undefined;
+
+const result = await getAllArticles(
+  page,
+  limit,
+  status,
+  search,
+  userId,
+);
 
     res.status(200).json({
       success: true,
@@ -111,7 +114,8 @@ export const getArticleByIdController = async (
       throw new AppError("شناسه مقاله معتبر نیست", 400);
     }
 
-    const article = await getArticleById(id);
+    const userId = res.locals.userId as number | undefined;
+const article = await getArticleById(id, userId);
 
     res.status(200).json({
       success: true,

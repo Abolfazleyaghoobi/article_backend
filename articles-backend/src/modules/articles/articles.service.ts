@@ -30,11 +30,13 @@ export const createArticle = async (
 
 // get all articles
 
+
 export const getAllArticles = async (
   page = 1,
   limit = 10,
   status?: "draft" | "published",
   search?: string,
+  viewerUserId?: number,
 ) => {
   const safePage = Math.max(1, Math.floor(page));
   const safeLimit = Math.min(50, Math.max(1, Math.floor(limit)));
@@ -44,6 +46,20 @@ export const getAllArticles = async (
     .orderBy("article.createdAt", "DESC")
     .skip((safePage - 1) * safeLimit)
     .take(safeLimit);
+
+  if (viewerUserId !== undefined) {
+    query.andWhere(
+      "(article.status = :published OR article.userId = :viewerUserId)",
+      {
+        published: "published",
+        viewerUserId,
+      },
+    );
+  } else {
+    query.andWhere("article.status = :published", {
+      published: "published",
+    });
+  }
 
   if (status) {
     query.andWhere("article.status = :status", { status });
@@ -67,16 +83,29 @@ export const getAllArticles = async (
     },
   };
 };
+
 // get article by id
-export const getArticleById = async (id: number) => {
+
+export const getArticleById = async (
+  id: number,
+  viewerUserId?: number,
+) => {
   const article = await articleRepository.findOneBy({ id });
 
   if (!article) {
     throw new AppError("مقاله پیدا نشد", 404);
   }
 
+  if (
+    article.status !== "published" &&
+    article.userId !== viewerUserId
+  ) {
+    throw new AppError("مقاله پیدا نشد", 404);
+  }
+
   return article;
 };
+
 
 // update article by id
 
