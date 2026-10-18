@@ -12,6 +12,8 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+// upload file
+app.use("/uploads", express.static("articles-backend/uploads"));
 
 app.get("/", (_req, res) => {
   res.send("Articles Backend API is running 🚀"+`${env.PORT}`);

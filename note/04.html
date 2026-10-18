@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="راهنمای آموزشی پروژه بک‌اند سایت مقالات با TypeScript، Express، TypeORM، MariaDB و JWT">
+    <title>گزارش پروژه بک‌اند مقالات | آموزش و مستندات</title>
+
+    <style>
+        :root {
+            --bg: #f3f5f9;
+            --surface: #ffffff;
+            --text: #202938;
+            --muted: #64748b;
+            --primary: #4f46e5;
+            --primary-light: #eef2ff;
+            --success: #15803d;
+            --success-light: #dcfce7;
+            --warning: #92400e;
+            --warning-light: #fef3c7;
+            --border: #e2e8f0;
+            --code-bg: #111827;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Tahoma, Arial, sans-serif;
+            line-height: 2;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            padding: 36px 28px;
+            margin-bottom: 24px;
+            color: #fff;
+            background: linear-gradient(135deg, #312e81, #4f46e5, #7c3aed);
+            border-radius: 20px;
+            box-shadow: 0 12px 35px rgba(79, 70, 229, 0.18);
+        }
+
+        header h1 {
+            margin-top: 0;
+            font-size: clamp(25px, 4vw, 38px);
+        }
+
+        header p {
+            margin-bottom: 0;
+            color: #e0e7ff;
+        }
+
+        .card {
+            padding: 26px;
+            margin-bottom: 22px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.035);
+        }
+
+        h2 {
+            padding-bottom: 10px;
+            margin-top: 0;
+            border-bottom: 2px solid var(--border);
+            font-size: 24px;
+        }
+
+        h3 {
+            margin-top: 28px;
+            color: var(--primary);
+            font-size: 19px;
+        }
+
+        p {
+            margin: 12px 0;
+        }
+
+        ul,
+        ol {
+            padding-right: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 10px;
+        }
+
+        .toc a {
+            display: block;
+            padding: 10px 14px;
+            background: var(--primary-light);
+            border-radius: 9px;
+        }
+
+        .note {
+            padding: 15px 18px;
+            margin: 18px 0;
+            background: var(--primary-light);
+            border-right: 4px solid var(--primary);
+            border-radius: 8px;
+        }
+
+        .success {
+            background: var(--success-light);
+            border-right-color: var(--success);
+        }
+
+        .warning {
+            background: var(--warning-light);
+            border-right-color: #d97706;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            margin: 3px;
+            color: var(--primary);
+            background: var(--primary-light);
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .ltr {
+            direction: ltr;
+            text-align: left;
+            unicode-bidi: isolate;
+        }
+
+        .code-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            color: #e5e7eb;
+            background: #273449;
+            border-radius: 9px 9px 0 0;
+            font-family: monospace;
+            direction: ltr;
+            text-align: left;
+        }
+
+        pre {
+            overflow-x: auto;
+            padding: 18px;
+            margin-top: 0;
+            color: #e5e7eb;
+            background: var(--code-bg);
+            border-radius: 0 0 9px 9px;
+            direction: ltr;
+            text-align: left;
+            white-space: pre;
+            tab-size: 2;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        code {
+            font-family: Consolas, Monaco, monospace;
+        }
+
+        p code,
+        li code,
+        td code {
+            padding: 2px 6px;
+            color: #4338ca;
+            background: #eef2ff;
+            border-radius: 4px;
+            direction: ltr;
+            unicode-bidi: isolate;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid var(--border);
+            text-align: right;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f1f5f9;
+        }
+
+        .method {
+            display: inline-block;
+            min-width: 68px;
+            padding: 2px 8px;
+            color: #fff;
+            background: #475569;
+            border-radius: 5px;
+            direction: ltr;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .method.post {
+            background: #15803d;
+        }
+
+        .method.get {
+            background: #2563eb;
+        }
+
+        .method.patch {
+            background: #b45309;
+        }
+
+        .method.delete {
+            background: #b91c1c;
+        }
+
+        .checklist li {
+            list-style: "✓  ";
+            padding-right: 5px;
+        }
+
+        footer {
+            padding: 20px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            header,
+            .card {
+                padding: 19px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            th,
+            td {
+                padding: 8px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            header,
+            .card {
+                box-shadow: none;
+                break-inside: avoid;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                overflow-wrap: anywhere;
+            }
+
+            a {
+                color: inherit;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <header>
+        <h1>مستندات پروژه بک‌اند سایت مقالات</h1>
+        <p>
+            گزارش آموزشی کارهای اخیر، ساختار پروژه، احراز هویت، مدیریت مقالات،
+            جست‌وجو، فیلتر، صفحه‌بندی، تست API و نکات امنیتی
+        </p>
+        <p>
+            <span class="tag">TypeScript</span>
+            <span class="tag">Express</span>
+            <span class="tag">TypeORM</span>
+            <span class="tag">MariaDB</span>
+            <span class="tag">JWT</span>
+            <span class="tag">Zod</span>
+        </p>
+    </header>
+
+    <section class="card">
+        <h2>فهرست مطالب</h2>
+        <nav class="toc">
+            <a href="#overview">۱. معرفی پروژه</a>
+            <a href="#structure">۲. ساختار فایل‌ها</a>
+            <a href="#commands">۳. دستورات اجرای پروژه</a>
+            <a href="#database">۴. دیتابیس و Migration</a>
+            <a href="#auth">۵. ثبت‌نام و ورود</a>
+            <a href="#jwt">۶. توکن JWT</a>
+            <a href="#middleware">۷. Middleware احراز هویت</a>
+            <a href="#articles">۸. ایجاد مقاله</a>
+            <a href="#ownership">۹. مالکیت مقاله</a>
+            <a href="#search">۱۰. جست‌وجو و فیلتر</a>
+            <a href="#routes">۱۱. مسیرهای API</a>
+            <a href="#testing">۱۲. تست با Postman</a>
+            <a href="#errors">۱۳. خطاهای اخیر و رفع آن‌ها</a>
+            <a href="#security">۱۴. نکات امنیتی</a>
+            <a href="#checklist">۱۵. چک‌لیست وضعیت پروژه</a>
+        </nav>
+    </section>
+
+    <section class="card" id="overview">
+        <h2>۱. معرفی پروژه</h2>
+
+        <p>
+            هدف، ساخت بک‌اند یک وب‌سایت مقاله است. بک‌اند مسئول دریافت درخواست‌ها،
+            بررسی اطلاعات، ارتباط با دیتابیس و برگرداندن پاسخ مناسب به کلاینت است.
+        </p>
+
+        <table>
+            <thead>
+            <tr>
+                <th>فناوری</th>
+                <th>کاربرد</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>TypeScript</td>
+                <td>نوشتن کد جاوااسکریپت همراه با بررسی نوع داده‌ها</td>
+            </tr>
+            <tr>
+                <td>Express</td>
+                <td>ساخت API و مدیریت درخواست‌های HTTP</td>
+            </tr>
+            <tr>
+                <td>TypeORM</td>
+                <td>ارتباط بین کد TypeScript و دیتابیس رابطه‌ای</td>
+            </tr>
+            <tr>
+                <td>MariaDB / MySQL</td>
+                <td>ذخیره کاربران و مقالات</td>
+            </tr>
+            <tr>
+                <td>Migration</td>
+                <td>ساخت و تغییر ساختار جداول دیتابیس به‌شکل قابل‌کنترل</td>
+            </tr>
+            <tr>
+                <td>Zod</td>
+                <td>اعتبارسنجی اطلاعات ورودی کاربر</td>
+            </tr>
+            <tr>
+                <td>bcrypt</td>
+                <td>هش‌کردن رمز عبور برای ذخیره‌سازی امن‌تر</td>
+            </tr>
+            <tr>
+                <td>JWT</td>
+                <td>ساخت توکن برای احراز هویت درخواست‌ها</td>
+            </tr>
+            <tr>
+                <td>Helmet و CORS</td>
+                <td>تنظیم برخی محافظت‌های HTTP و سیاست دسترسی مرورگر</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="note success">
+            وضعیت گزارش‌شده در آخرین مراحل: کاربر اعلام کرده بود تست‌ها کار می‌کنند
+            و خطاهای مربوط به تغییر امضای توابع و اعتبارسنجی اصلاح شده‌اند.
+            قطعه‌کدهای این سند برای یادگیری و مقایسه با نسخه فعلی فایل‌ها هستند؛
+            ممکن است همه فایل‌ها دقیقاً با نسخه نهایی پروژه یکسان نباشند.
+        </div>
+    </section>
+
+    <section class="card" id="structure">
+        <h2>۲. ساختار کلی فایل‌های پروژه</h2>
+
+        <p>مسیر ریشه پروژه:</p>
+        <pre><code>/home/abolfazle/practiceNestjs</code></pre>
+
+        <p>مسیر بک‌اند:</p>
+        <pre><code>/home/abolfazle/practiceNestjs/articles-backend</code></pre>
+
+        <pre><code>articles-backend/
+└── src/
+    ├── server.ts
+    ├── config/
+    │   └── env.ts
+    ├── database/
+    │   ├── data-source.ts
+    │   └── migrations/
+    ├── common/
+    │   ├── errors/
+    │   │   └── app.error.ts
+    │   └── middleware/
+    │       └── auth.middleware.ts
+    ├── modules/
+    │   ├── auth/
+    │   │   ├── auth.controller.ts
+    │   │   ├── auth.service.ts
+    │   │   ├── auth.validation.ts
+    │   │   └── jwt.service.ts
+    │   ├── articles/
+    │   │   ├── articles.controller.ts
+    │   │   ├── articles.service.ts
+    │   │   ├── articles.repository.ts
+    │   │   ├── articles.dto.ts
+    │   │   ├── articles.validation.ts
+    │   │   └── articles.routes.ts
+    │   └── users/
+    └── routes/
+        └── index.ts</code></pre>
+
+        <div class="note">
+            این درخت، نمای کلی فایل‌هایی است که در کارهای اخیر به آن‌ها اشاره شده است.
+            نام بعضی فایل‌ها را با ساختار واقعی پروژه خودت تطبیق بده.
+        </div>
+
+        <h3>مسئولیت هر لایه چیست؟</h3>
+        <ul>
+            <li><strong>Routes:</strong> تعیین می‌کند هر آدرس به کدام کنترلر برسد.</li>
+            <li><strong>Controller:</strong> درخواست HTTP را می‌خواند و پاسخ را برمی‌گرداند.</li>
+            <li><strong>Service:</strong> منطق اصلی برنامه را اجرا می‌کند.</li>
+            <li><strong>Repository:</strong> عملیات مربوط به دیتابیس را انجام می‌دهد.</li>
+            <li><strong>Validation:</strong> شکل و اعتبار اطلاعات ورودی را بررسی می‌کند.</li>
+            <li><strong>Middleware:</strong> قبل از اجرای کنترلر، کارهایی مثل احراز هویت را انجام می‌دهد.</li>
+        </ul>
+    </section>
+
+    <section class="card" id="commands">
+        <h2>۳. دستورات اجرای پروژه</h2>
+
+        <h3>بررسی خطاهای TypeScript</h3>
+        <div class="code-title">Terminal</div>
+        <pre><code>npm run typecheck</code></pre>
+        <p>
+            این دستور نوع داده‌ها و بسیاری از خطاهای مربوط به TypeScript را بررسی می‌کند.
+            موفقیت آن به‌تنهایی به معنی درست‌بودن تمام رفتارهای برنامه نیست.
+        </p>
+
+        <h3>اجرای سرور در حالت توسعه</h3>
+        <div class="code-title">Terminal</div>
+        <pre><code>npm run dev</code></pre>
+        <p>آدرس پایه سرور در تنظیمات اخیر:</p>
+        <pre><code>http://localhost:3100</code></pre>
+
+        <h3>ساخت نسخه قابل اجرا</h3>
+        <div class="code-title">Terminal</div>
+        <pre><code>npm run build</code></pre>
+
+        <h3>اجرای نسخه ساخته‌شده</h3>
+        <div class="code-title">Terminal</div>
+        <pre><code>npm start</code></pre>
+
+        <div class="note warning">
+            اگر سرور روی پورت دیگری اجرا شد، مقدار پورت داخل تنظیمات محیطی و پیام شروع
+            سرور را بررسی کن. در تست‌ها از پورت واقعی سرور استفاده کن.
+        </div>
+    </section>
+
+    <section class="card" id="database">
+        <h2>۴. دیتابیس و Migration</h2>
+
+        <p>
+            برای اتصال پروژه به MariaDB یا MySQL از TypeORM استفاده شده است.
+            تنظیمات اتصال در فایل <code>data-source.ts</code> قرار دارد و مقادیر اتصال
+            از تنظیمات محیطی خوانده می‌شوند.
+        </p>
+
+        <div class="code-title">data-source.ts — نمونه تنظیمات اصلی</div>
+        <pre><code>import "reflect-metadata";
+import { DataSource } from "typeorm";
+
+import { env } from "../../config/env";
+import { User } from "../../modules/users/user.entity";
+import { Article } from "../../modules/articles/article.entity";
+
+export const AppDataSource = new DataSource({
+  type: "mysql",
+  host: env.DB_HOST,
+  port: env.DB_PORT,
+  username: env.DB_USER,
+  password: env.DB_PASSWORD,
+  database: env.DB_NAME,
+
+  entities: [User, Article],
+
+  migrations: [
+    "articles-backend/src/database/migrations/*.ts",
+  ],
+
+  synchronize: false,
+  logging: false,
+});</code></pre>
+
+        <p>
+            مسیر دقیق Entityها باید با مسیر واقعی فایل‌های پروژه مطابقت داشته باشد.
+            قطعه بالا برای توضیح تنظیمات است؛ آن را بدون بررسی مسیرهای فعلی جایگزین نکن.
+        </p>
+
+        <h3>چرا synchronize برابر false است؟</h3>
+        <p>
+            با <code>synchronize: false</code>، TypeORM به‌صورت خودکار ساختار جداول را
+            تغییر نمی‌دهد. تغییرات ساختار دیتابیس با Migration انجام می‌شوند تا قابل
+            پیگیری و کنترل باشند.
+        </p>
+
+        <h3>Migrationهای ثبت‌شده در پروژه</h3>
+        <ul>
+            <li>ساخت جدول کاربران (<code>Users</code>)</li>
+            <li>ساخت جدول مقالات (<code>Articles</code>)</li>
+            <li>افزودن فیلد هش رمز عبور به کاربران (<code>passwordHash</code>)</li>
+        </ul>
+
+        <div class="note success">
+            طبق گزارش مراحل قبلی، Migrationهای کاربران، مقالات و رمز عبور اجرا شده‌اند.
+            پیش از اجرای مجدد هر Migration، وضعیت دیتابیس را بررسی کن.
+        </div>
+    </section>
+
+    <section class="card" id="auth">
+        <h2>۵. ثبت‌نام و ورود کاربر</h2>
+
+        <p>
+            سیستم احراز هویت دو عملیات اصلی دارد:
+        </p>
+
+        <ul>
+            <li><strong>Register:</strong> ایجاد حساب کاربری و هش‌کردن رمز عبور.</li>
+            <li><strong>Login:</strong> بررسی ایمیل و رمز عبور و تولید توکن دسترسی.</li>
+        </ul>
+
+        <h3>اعتبارسنجی اطلاعات ورود و ثبت‌نام</h3>
+        <div class="code-title">auth.validation.ts</div>
+        <pre><code>import { z } from "zod";
+
+export const registerSchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  email: z.string().trim().email().max(150),
+  password: z.string().min(8).max(72),
+});
+
+export const loginSchema = z.object({
+  email: z.string().trim().email().max(150),
+  password: z.string().min(1).max(72),
+});</code></pre>
+
+        <h3>توضیح ساده کد</h3>
+        <ul>
+            <li><code>z.object()</code> شکل داده مورد انتظار را تعریف می‌کند.</li>
+            <li><code>trim()</code> فاصله‌های ابتدا و انتهای متن را حذف می‌کند.</li>
+            <li><code>min(2)</code> حداقل طول را تعیین می‌کند.</li>
+            <li><code>max(100)</code> حداکثر طول را تعیین می‌کند.</li>
+            <li><code>email()</code> فرمت ایمیل را بررسی می‌کند.</li>
+        </ul>
+
+        <div class="note warning">
+            محدودیت ۷۲ در این نمونه برای رمز عبور با توجه به محدودیت بایتی bcrypt در نظر
+            گرفته شده است. بررسی بایتی نیز باید در سرویس انجام شود؛ طول کاراکترها همیشه
+            با طول بایت یکسان نیست.
+        </div>
+
+        <h3>نمونه ثبت‌نام</h3>
+        <p>در Postman درخواست زیر را بساز:</p>
+        <pre><code>POST http://localhost:3100/api/v1/auth/register</code></pre>
+
+        <p>بخش Body را روی JSON قرار بده:</p>
+        <pre><code>{
+  "name": "Ali Reza",
+  "email": "ali@example.com",
+  "password": "StrongPass123"
+}</code></pre>
+
+        <p>
+            از ایمیلی استفاده کن که قبلاً در دیتابیس ثبت نشده باشد.
+            پاسخ موفق معمولاً با وضعیت HTTP برابر <code>201 Created</code> برمی‌گردد،
+            اما ساختار دقیق پاسخ به کنترلر فعلی پروژه بستگی دارد.
+        </p>
+
+        <h3>نمونه ورود</h3>
+        <pre><code>POST http://localhost:3100/api/v1/auth/login</code></pre>
+
+        <pre><code>{
+  "email": "ali@example.com",
+  "password": "StrongPass123"
+}</code></pre>
+
+        <p>
+            پس از ورود موفق، پاسخ باید توکن دسترسی را برگرداند. مقدار توکن را برای
+            درخواست‌های محافظت‌شده استفاده کن و آن را در مکان عمومی منتشر نکن.
+        </p>
+
+        <h3>چرا رمز عبور را هش می‌کنیم؟</h3>
+        <p>
+            رمز عبور خام نباید مستقیماً در دیتابیس ذخیره شود. bcrypt رمز را هش می‌کند
+            و هنگام ورود، رمز واردشده با هش ذخیره‌شده مقایسه می‌شود.
+        </p>
+
+        <div class="code-title">نمونه منطق bcrypt</div>
+        <pre><code>const passwordHash = await bcrypt.hash(password, 12);
+
+// هنگام ورود:
+const isPasswordValid = await bcrypt.compare(
+  password,
+  user.passwordHash,
+);</code></pre>
+
+        <div class="note">
+            عدد ۱۲، تعداد دورهای هزینه bcrypt در این نمونه است. مقدار مناسب به توان
+            پردازشی سرور و نیاز پروژه بستگی دارد.
+        </div>
+    </section>
+
+    <section class="card" id="jwt">
+        <h2>۶. توکن JWT</h2>
+
+        <p>
+            پس از ورود موفق، سرور می‌تواند یک JWT صادر کند. کلاینت در درخواست‌های بعدی
+            توکن را ارسال می‌کند تا سرور بتواند کاربر را شناسایی کند.
+        </p>
+
+        <div class="code-title">jwt.service.ts — نمونه منطق ثبت و بررسی توکن</div>
+        <pre><code>import jwt from "jsonwebtoken";
+import { env } from "../../config/env";
+
+export interface JwtPayload {
+  userId: number;
+}
+
+export function signAccessToken(userId: number): string {
+  return jwt.sign(
+    { userId },
+    env.JWT_SECRET,
+    {
+      subject: String(userId),
+      expiresIn: "1h",
+    },
+  );
+}
+
+export function verifyAccessToken(
+  token: string,
+): JwtPayload {
+  const payload = jwt.verify(token, env.JWT_SECRET);
+
+  if (
+    typeof payload === "string" ||
+    typeof payload.userId !== "number"
+  ) {
+    throw new Error("توکن نامعتبر است");
+  }
+
+  return {
+    userId: payload.userId,
+  };
+}</code></pre>
+
+        <h3>معنی قسمت‌های مهم</h3>
+        <ul>
+            <li><code>userId</code>: شناسه کاربری که توکن به او تعلق دارد.</li>
+            <li><code>JWT_SECRET</code>: کلید محرمانه‌ای که برای امضا و بررسی توکن استفاده می‌شود.</li>
+            <li><code>expiresIn: "1h"</code>: توکن پس از یک ساعت منقضی می‌شود.</li>
+            <li><code>jwt.verify()</code>: امضا و اعتبار توکن را بررسی می‌کند.</li>
+        </ul>
+
+        <div class="note warning">
+            کلید JWT را داخل کد منتشرشده، Git یا پیام‌های عمومی قرار نده.
+            مقدار آن باید از فایل محیطی امن خوانده شود. Payload توکن رمزگذاری‌شده نیست؛
+            اطلاعات حساس را داخل آن قرار نده.
+        </div>
+    </section>
+
+    <section class="card" id="middleware">
+        <h2>۷. Middleware احراز هویت</h2>
+
+        <p>
+            Middleware تابعی است که قبل از رسیدن درخواست به کنترلر اجرا می‌شود.
+            در این پروژه، Middleware توکن را از هدر درخواست می‌خواند و اعتبار آن را
+            بررسی می‌کند.
+        </p>
+
+        <div class="code-title">common/middleware/auth.middleware.ts</div>
+        <pre><code>import type {
+  NextFunction,
+  Request,
+  Response,
+} from "express";
+
+import {
+  verifyAccessToken,
+} from "../../modules/auth/jwt.service";
+
+export function authenticate(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const authorization = req.headers.authorization;
+
+  if (!authorization?.startsWith("Bearer ")) {
+    return res.status(401).json({
+      success: false,
+      message: "برای دسترسی به این منبع باید وارد شوید",
+    });
+  }
+
+  const token = authorization
+    .slice("Bearer ".length)
+    .trim();
+
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: "توکن احراز هویت ارسال نشده است",
+    });
+  }
+
+  try {
+    const payload = verifyAccessToken(token);
+
+    res.locals.userId = payload.userId;
+
+    return next();
+  } catch {
+    return res.status(401).json({
+      success: false,
+      message: "توکن نامعتبر یا منقضی شده است",
+    });
+  }
+}</code></pre>
+
+        <h3>هدر Authorization چیست؟</h3>
+        <p>در Postman یا کلاینت، توکن به این شکل ارسال می‌شود:</p>
+        <pre><code>Authorization: Bearer YOUR_ACCESS_TOKEN</code></pre>
+
+        <p>
+            عبارت <code>Bearer</code> نوع شیوه ارسال توکن را مشخص می‌کند.
+            Middleware بعد از بررسی موفق، شناسه کاربر را در
+            <code>res.locals.userId</code> قرار می‌دهد.
+        </p>
+
+        <div class="note success">
+            از این پس، شناسه مالک مقاله باید از اطلاعات کاربر احراز هویت‌شده گرفته شود،
+            نه از مقداری که کلاینت آزادانه در Body ارسال می‌کند.
+        </div>
+    </section>
+
+    <section class="card" id="articles">
+        <h2>۸. ایجاد مقاله</h2>
+
+        <p>
+            اطلاعات مقاله می‌تواند شامل عنوان، آدرس یکتا، محتوا و وضعیت انتشار باشد.
+            شناسه نویسنده از توکن کاربر دریافت می‌شود.
+        </p>
+
+        <h3>DTO چیست؟</h3>
+        <p>
+            DTO مخفف Data Transfer Object است. این ساختار مشخص می‌کند چه اطلاعاتی
+            برای یک عملیات به سرویس ارسال می‌شوند.
+        </p>
+
+        <div class="code-title">articles.dto.ts — نمونه DTO</div>
+        <pre><code>export interface CreateArticleDto {
+  title: string;
+  slug: string;
+  content: string;
+  status?: "draft" | "published";
+}</code></pre>
+
+        <div class="note warning">
+            در طراحی فعلی، <code>userId</code> نباید بخشی از اطلاعات قابل‌اعتماد
+            ارسال‌شده توسط کاربر باشد. بنابراین در DTO ایجاد مقاله نباید
+            <code>userId</code> را از Body دریافت کنیم؛ شناسه مالک را از توکن می‌گیریم.
+        </div>
+
+        <h3>سرویس ایجاد مقاله</h3>
+        <div class="code-title">articles.service.ts — نمونه منطق ایجاد</div>
+        <pre><code>import { articleRepository } from "./articles.repository";
+import type { CreateArticleDto } from "./articles.dto";
+import { AppError } from "../../common/errors/app.error";
+
+export const createArticle = async (
+  data: CreateArticleDto,
+  userId: number,
+) => {
+  const existingArticle = await articleRepository.findOneBy({
+    slug: data.slug,
+  });
+
+  if (existingArticle) {
+    throw new AppError(
+      "این آدرس مقاله قبلاً ثبت شده است",
+      409,
+    );
+  }
+
+  const article = articleRepository.create({
+    title: data.title,
+    slug: data.slug,
+    content: data.content,
+    status: data.status ?? "draft",
+    userId,
+  });
+
+  return articleRepository.save(article);
+};</code></pre>
+
+        <h3>توضیح خط‌به‌خط منطق</h3>
+        <ol>
+            <li>سرویس اطلاعات مقاله و شناسه کاربر را دریافت می‌کند.</li>
+            <li>بررسی می‌کند آیا مقاله‌ای با همین <code>slug</code> وجود دارد یا خیر.</li>
+            <li>اگر آدرس تکراری باشد، خطای <code>409 Conflict</code> ایجاد می‌شود.</li>
+            <li>اگر وضعیت ارسال نشده باشد، مقدار پیش‌فرض <code>draft</code> انتخاب می‌شود.</li>
+            <li>مقاله همراه با شناسه مالک در دیتابیس ذخیره می‌شود.</li>
+        </ol>
+
+        <h3>درخواست ایجاد مقاله</h3>
+        <pre><code>POST http://localhost:3100/api/v1/articles</code></pre>
+
+        <p>در Postman بخش Authorization را روی Bearer Token بگذار و توکن ورود را وارد کن.</p>
+
+        <pre><code>{
+  "title": "آموزش TypeScript",
+  "slug": "typescript-guide",
+  "content": "در این مقاله با TypeScript آشنا می‌شویم.",
+  "status": "draft"
+}</code></pre>
+
+        <p>
+            توجه: در Body بالا عمداً <code>userId</code> وجود ندارد؛ مالکیت از
+            اطلاعات احراز هویت‌شده استخراج می‌شود.
+        </p>
+    </section>
+
+    <section class="card" id="ownership">
+        <h2>۹. مالکیت مقاله و جلوگیری از ویرایش غیرمجاز</h2>
+
+        <p>
+            فقط ورود کاربر کافی نیست. اگر کاربر وارد حساب خودش شده باشد، نباید بتواند
+            مقاله متعلق به کاربر دیگری را ویرایش یا حذف کند.
+        </p>
+
+        <h3>الگوی بررسی مالکیت در سرویس</h3>
+        <div class="code-title">نمونه آموزشی برای updateArticle</div>
+        <pre><code>export const updateArticle = async (
+  id: number,
+  data: Partial&lt;CreateArticleDto&gt;,
+  userId: number,
+) => {
+  const article = await getArticleById(id);
+
+  if (article.userId !== userId) {
+    throw new AppError(
+      "شما اجازه ویرایش این مقاله را ندارید",
+      403,
+    );
+  }
+
+  if (data.slug && data.slug !== article.slug) {
+    const existingArticle =
+      await articleRepository.findOneBy({
+        slug: data.slug,
+      });
+
+    if (existingArticle) {
+      throw new AppError(
+        "این آدرس مقاله قبلاً ثبت شده است",
+        409,
+      );
+    }
+  }
+
+  articleRepository.merge(article, {
+    title: data.title,
+    slug: data.slug,
+    content: data.content,
+    status: data.status,
+  });
+
+  return articleRepository.save(article);
+};</code></pre>
+
+        <h3>الگوی بررسی مالکیت در حذف</h3>
+        <div class="code-title">نمونه آموزشی برای deleteArticle</div>
+        <pre><code>export const deleteArticle = async (
+  id: number,
+  userId: number,
+) => {
+  const article = await getArticleById(id);
+
+  if (article.userId !== userId) {
+    throw new AppError(
+      "شما اجازه حذف این مقاله را ندارید",
+      403,
+    );
+  }
+
+  await articleRepository.remove(article);
+};</code></pre>
+
+        <div class="note warning">
+            این دو قطعه، الگوی پیشنهادی بررسی مالکیت هستند؛ قبل از جایگزینی، آن‌ها را
+            با نسخه نهایی سرویس خودت مقایسه کن. نتیجه نهایی باید این باشد که سرویس
+            برای ویرایش و حذف، هم شناسه مقاله و هم شناسه کاربر احراز هویت‌شده را بررسی کند.
+        </div>
+
+        <h3>تفاوت وضعیت‌های HTTP</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>کد</th>
+                <th>معنی</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><code>400</code></td>
+                <td>درخواست یا اطلاعات ورودی نامعتبر است.</td>
+            </tr>
+            <tr>
+                <td><code>401</code></td>
+                <td>کاربر احراز هویت نشده یا توکن معتبر نیست.</td>
+            </tr>
+            <tr>
+                <td><code>403</code></td>
+                <td>کاربر احراز هویت شده، اما اجازه انجام عملیات را ندارد.</td>
+            </tr>
+            <tr>
+                <td><code>404</code></td>
+                <td>مقاله یا منبع موردنظر پیدا نشده است.</td>
+            </tr>
+            <tr>
+                <td><code>409</code></td>
+                <td>تعارضی مثل تکراری‌بودن آدرس مقاله وجود دارد.</td>
+            </tr>
+            <tr>
+                <td><code>500</code></td>
+                <td>خطای پیش‌بینی‌نشده در سمت سرور رخ داده است.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="card" id="search">
+        <h2>۱۰. دریافت، جست‌وجو، فیلتر و صفحه‌بندی مقالات</h2>
+
+        <p>
+            در این بخش، API فهرست مقالات پارامترهایی برای صفحه، تعداد نتیجه‌ها،
+            وضعیت انتشار و جست‌وجو در عنوان دریافت می‌کند.
+        </p>
+
+        <div class="code-title">articles.service.ts — نمونه getAllArticles</div>
+        <pre><code>export const getAllArticles = async (
+  page = 1,
+  limit = 10,
+  status?: "draft" | "published",
+  search?: string,
+) => {
+  const safePage = Math.max(1, Math.floor(page));
+
+  const safeLimit = Math.min(
+    50,
+    Math.max(1, Math.floor(limit)),
+  );
+
+  const query = articleRepository
+    .createQueryBuilder("article")
+    .orderBy("article.createdAt", "DESC")
+    .skip((safePage - 1) * safeLimit)
+    .take(safeLimit);
+
+  if (status) {
+    query.andWhere(
+      "article.status = :status",
+      { status },
+    );
+  }
+
+  if (search?.trim()) {
+    query.andWhere(
+      "article.title LIKE :search",
+      { search: `%${search.trim()}%` },
+    );
+  }
+
+  const [articles, total] =
+    await query.getManyAndCount();
+
+  return {
+    data: articles,
+    pagination: {
+      page: safePage,
+      limit: safeLimit,
+      total,
+      totalPages: Math.ceil(total / safeLimit),
+    },
+  };
+};</code></pre>
+
+        <h3>توضیح پارامترها</h3>
+        <ul>
+            <li><code>page</code>: شماره صفحه موردنظر.</li>
+            <li><code>limit</code>: تعداد مقالات در هر صفحه.</li>
+            <li><code>status</code>: فیلتر بر اساس <code>draft</code> یا <code>published</code>.</li>
+            <li><code>search</code>: جست‌وجو در عنوان مقاله.</li>
+            <li><code>skip()</code>: تعداد رکوردهایی که باید از ابتدای نتایج رد شوند.</li>
+            <li><code>take()</code>: حداکثر تعداد رکوردهای دریافت‌شده.</li>
+            <li><code>getManyAndCount()</code>: دریافت نتایج و تعداد کل رکوردهای منطبق.</li>
+        </ul>
+
+        <h3>مثال صفحه‌بندی</h3>
+        <pre><code>GET http://localhost:3100/api/v1/articles?page=2&amp;limit=10</code></pre>
+
+        <p>
+            این درخواست صفحه دوم را با حداکثر ۱۰ مقاله درخواست می‌کند.
+            مقدار <code>skip</code> برابر ۱۰ خواهد بود.
+        </p>
+
+        <h3>مثال جست‌وجو و فیلتر هم‌زمان</h3>
+        <pre><code>GET http://localhost:3100/api/v1/articles?page=2&amp;limit=10&amp;search=typescript&amp;status=published</code></pre>
+
+        <p>این درخواست به دنبال مقالات منتشرشده‌ای می‌گردد که عنوانشان شامل عبارت TypeScript باشد.</p>
+
+        <div class="note">
+            جست‌وجوی نمونه با <code>LIKE</code> انجام می‌شود. رفتار حساس‌بودن به حروف
+            بزرگ و کوچک به Collation دیتابیس بستگی دارد. برای جست‌وجوی پیشرفته‌تر می‌توان
+            بعداً از Full-Text Search استفاده کرد.
+        </div>
+
+        <h3>دریافت یک مقاله با شناسه</h3>
+        <div class="code-title">نمونه getArticleById</div>
+        <pre><code>export const getArticleById = async (
+  id: number,
+) => {
+  const article =
+    await articleRepository.findOneBy({ id });
+
+  if (!article) {
+    throw new AppError(
+      "مقاله پیدا نشد",
+      404,
+    );
+  }
+
+  return article;
+};</code></pre>
+
+        <p>
+            اگر مقاله‌ای با شناسه داده‌شده وجود نداشته باشد، سرویس خطای
+            <code>404</code> ایجاد می‌کند.
+        </p>
+    </section>
+
+    <section class="card" id="routes">
+        <h2>۱۱. مسیرهای API</h2>
+
+        <p>
+            مسیرهای زیر بر اساس ساختار اخیر پروژه مستند شده‌اند.
+            آدرس پایه API برابر <code>http://localhost:3100/api/v1</code> است.
+        </p>
+
+        <table>
+            <thead>
+            <tr>
+                <th>متد</th>
+                <th>مسیر</th>
+                <th>کاربرد</th>
+                <th>احراز هویت</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><span class="method post">POST</span></td>
+                <td dir="ltr">/auth/register</td>
+                <td>ثبت‌نام کاربر</td>
+                <td>خیر</td>
+            </tr>
+            <tr>
+                <td><span class="method post">POST</span></td>
+                <td dir="ltr">/auth/login</td>
+                <td>ورود کاربر</td>
+                <td>خیر</td>
+            </tr>
+            <tr>
+                <td><span class="method get">GET</span></td>
+                <td dir="ltr">/articles</td>
+                <td>فهرست، جست‌وجو و فیلتر مقالات</td>
+                <td>در ساختار اخیر عمومی</td>
+            </tr>
+            <tr>
+                <td><span class="method get">GET</span></td>
+                <td dir="ltr">/articles/:id</td>
+                <td>دریافت یک مقاله</td>
+                <td>در ساختار اخیر عمومی</td>
+            </tr>
+            <tr>
+                <td><span class="method post">POST</span></td>
+                <td dir="ltr">/articles</td>
+                <td>ایجاد مقاله</td>
+                <td>بله</td>
+            </tr>
+            <tr>
+                <td><span class="method patch">PATCH</span></td>
+                <td dir="ltr">/articles/:id</td>
+                <td>ویرایش بخشی از مقاله</td>
+                <td>بله</td>
+            </tr>
+            <tr>
+                <td><span class="method delete">DELETE</span></td>
+                <td dir="ltr">/articles/:id</td>
+                <td>حذف مقاله</td>
+                <td>بله</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>نمونه فایل Route مقالات</h3>
+        <div class="code-title">articles.routes.ts</div>
+        <pre><code>import { Router } from "express";
+
+import {
+  authenticate,
+} from "../../common/middleware/auth.middleware";
+
+import {
+  createArticleController,
+  deleteArticleController,
+  getAllArticlesController,
+  getArticleByIdController,
+  updateArticleController,
+} from "./articles.controller";
+
+const router = Router();
+
+// Public routes
+router.get("/", getAllArticlesController);
+router.get("/:id", getArticleByIdController);
+
+// Protected routes
+router.post(
+  "/",
+  authenticate,
+  createArticleController,
+);
+
+router.patch(
+  "/:id",
+  authenticate,
+  updateArticleController,
+);
+
+router.delete(
+  "/:id",
+  authenticate,
+  deleteArticleController,
+);
+
+export default router;</code></pre>
+
+        <div class="note warning">
+            اگر مقاله‌های پیش‌نویس خصوصی هستند، عمومی‌بودن GETها به‌تنهایی کافی نیست.
+            سرویس فهرست و دریافت مقاله باید دسترسی به پیش‌نویس‌ها را نیز کنترل کند؛
+            در غیر این صورت ممکن است محتوای منتشرنشده به کاربران نمایش داده شود.
+        </div>
+    </section>
+
+    <section class="card" id="testing">
+        <h2>۱۲. راهنمای تست API با Postman یا Thunder Client</h2>
+
+        <h3>مرحله اول: ثبت‌نام</h3>
+        <ol>
+            <li>درخواست جدید بساز.</li>
+            <li>متد را روی <code>POST</code> قرار بده.</li>
+            <li>آدرس <code>http://localhost:3100/api/v1/auth/register</code> را وارد کن.</li>
+            <li>در بخش Body، گزینه <code>raw</code> و سپس <code>JSON</code> را انتخاب کن.</li>
+            <li>اطلاعات نام، ایمیل و رمز عبور را ارسال کن.</li>
+        </ol>
+
+        <h3>مرحله دوم: ورود</h3>
+        <ol>
+            <li>درخواست <code>POST /api/v1/auth/login</code> را ارسال کن.</li>
+            <li>ایمیل و رمز عبور ثبت‌شده را وارد کن.</li>
+            <li>توکن دسترسی موجود در پاسخ را کپی کن.</li>
+        </ol>
+
+        <h3>مرحله سوم: ایجاد مقاله</h3>
+        <ol>
+            <li>درخواست <code>POST /api/v1/articles</code> بساز.</li>
+            <li>در بخش Authorization، نوع <code>Bearer Token</code> را انتخاب کن.</li>
+            <li>توکن مرحله قبل را وارد کن.</li>
+            <li>عنوان، آدرس، محتوا و وضعیت مقاله را در Body ارسال کن.</li>
+            <li>فیلد <code>userId</code> را از Body حذف کن.</li>
+        </ol>
+
+        <h3>مرحله چهارم: فهرست و جست‌وجو</h3>
+        <pre><code>GET http://localhost:3100/api/v1/articles</code></pre>
+
+        <p>برای تست جست‌وجو و صفحه‌بندی:</p>
+        <pre><code>GET http://localhost:3100/api/v1/articles?page=1&amp;limit=10&amp;search=typescript</code></pre>
+
+        <h3>مرحله پنجم: ویرایش مقاله</h3>
+        <pre><code>PATCH http://localhost:3100/api/v1/articles/1</code></pre>
+
+        <p>نمونه Body:</p>
+        <pre><code>{
+  "title": "عنوان جدید مقاله"
+}</code></pre>
+
+        <p>
+            توکن معتبر را در Authorization ارسال کن. شناسه ۱ باید متعلق به مقاله‌ای
+            باشد که کاربر فعلی اجازه ویرایش آن را دارد.
+        </p>
+
+        <h3>مرحله ششم: حذف مقاله</h3>
+        <pre><code>DELETE http://localhost:3100/api/v1/articles/1</code></pre>
+
+        <p>
+            حذف را فقط روی مقاله آزمایشی انجام بده. انتظار می‌رود کاربر نتواند مقاله
+            متعلق به کاربر دیگری را حذف کند.
+        </p>
+
+        <h3>آزمون‌های مهم احراز هویت و مالکیت</h3>
+        <ul class="checklist">
+            <li>ایجاد مقاله بدون توکن باید رد شود.</li>
+            <li>ارسال توکن نامعتبر باید پاسخ 401 ایجاد کند.</li>
+            <li>ایجاد مقاله با توکن معتبر باید شناسه مالک را از توکن بگیرد.</li>
+            <li>ویرایش مقاله متعلق به کاربر دیگر باید رد شود.</li>
+            <li>حذف مقاله متعلق به کاربر دیگر باید رد شود.</li>
+            <li>جست‌وجو و فیلتر باید نتایج مورد انتظار را برگردانند.</li>
+            <li>شناسه مقاله ناموجود باید به پاسخ مناسب مانند 404 منجر شود.</li>
+        </ul>
+    </section>
+
+    <section class="card" id="errors">
+        <h2>۱۳. خطاهای اخیر و مفهوم آن‌ها</h2>
+
+        <h3>خطای TypeScript: ویژگی userId وجود ندارد</h3>
+        <pre><code>Property 'userId' does not exist on type 'CreateArticleDto'</code></pre>
+
+        <p>
+            علت: کد تلاش می‌کرد <code>data.userId</code> را بخواند، درحالی‌که
+            <code>userId</code> از DTO حذف شده بود.
+        </p>
+
+        <p>
+            راه‌حل طراحی: شناسه کاربر را به‌عنوان آرگومان جداگانه از کنترلر به سرویس
+            ارسال کن؛ این شناسه باید از Middleware احراز هویت گرفته شود.
+        </p>
+
+        <h3>خطای تعداد آرگومان‌ها</h3>
+        <pre><code>Expected 2 arguments, but got 1</code></pre>
+
+        <p>
+            علت: امضای تابع سرویس تغییر کرده بود، اما کنترلر هنوز تابع را با تعداد
+            آرگومان قبلی صدا می‌زد.
+        </p>
+
+        <p>
+            راه‌حل: تعریف تابع سرویس و نحوه فراخوانی آن در کنترلر باید هماهنگ باشند.
+            برای مثال، اگر سرویس به <code>data</code> و <code>userId</code> نیاز دارد،
+            کنترلر باید هر دو را ارسال کند.
+        </p>
+
+        <h3>خطای Zod درباره userId</h3>
+        <pre><code>userId expected number, received undefined</code></pre>
+
+        <p>
+            علت: Schema هنوز وجود <code>userId</code> در Body را اجباری می‌دانست،
+            درحالی‌که طراحی به استفاده از شناسه استخراج‌شده از توکن تغییر کرده بود.
+        </p>
+
+        <p>
+            راه‌حل: <code>userId</code> را از Schema ورودی ایجاد مقاله حذف کن و در کنترلر
+            شناسه معتبر موجود در <code>res.locals.userId</code> را به سرویس بده.
+        </p>
+
+        <h3>خطای bcrypt</h3>
+        <pre><code>Error: data and hash arguments required</code></pre>
+
+        <p>
+            این خطا هنگام اجرای <code>bcrypt.compare()</code> نشان می‌دهد که رمز ورودی
+            یا هش ذخیره‌شده به تابع نرسیده است.
+        </p>
+
+        <p>مواردی که باید بررسی شوند:</p>
+        <ul>
+            <li>آیا کاربر با ایمیل موردنظر در دیتابیس وجود دارد؟</li>
+            <li>آیا فیلد <code>passwordHash</code> از دیتابیس دریافت شده است؟</li>
+            <li>اگر فیلد در Entity با <code>select: false</code> تعریف شده، آیا در Query با <code>addSelect()</code> دریافت می‌شود؟</li>
+            <li>آیا مقدار صحیح به <code>bcrypt.compare(password, passwordHash)</code> ارسال می‌شود؟</li>
+        </ul>
+
+        <div class="code-title">نمونه دریافت هش در Query Builder</div>
+        <pre><code>const user = await userRepository
+  .createQueryBuilder("user")
+  .addSelect("user.passwordHash")
+  .where("user.email = :email", { email })
+  .getOne();</code></pre>
+
+        <div class="note success">
+            در آخرین گزارش، کاربر اعلام کرده بود مشکل ناشی از اشتباه خودش بوده و
+            اصلاح شده است. این بخش برای یادآوری روش عیب‌یابی نگه داشته شده است.
+        </div>
+    </section>
+
+    <section class="card" id="security">
+        <h2>۱۴. نکات امنیتی مهم</h2>
+
+        <ul class="checklist">
+            <li>رمز عبور را به‌صورت متن ساده در دیتابیس ذخیره نکن.</li>
+            <li>کلید JWT را در فایل محیطی نگه دار و آن را منتشر نکن.</li>
+            <li>در عملیات ایجاد مقاله، مالک را از توکن معتبر استخراج کن.</li>
+            <li>برای ویرایش و حذف مقاله، مالکیت را در سمت سرور بررسی کن.</li>
+            <li>ورودی‌های کاربر را با Zod یا اعتبارسنجی مناسب بررسی کن.</li>
+            <li>برای شناسه‌ها، مقادیر عددی مثبت و معتبر را بررسی کن.</li>
+            <li>برای خطاهای مورد انتظار از کدهای HTTP مناسب استفاده کن.</li>
+            <li>برای Queryهای دیتابیس از پارامترهای امن استفاده کن.</li>
+            <li>برای فهرست مقالات، سقف مشخصی برای limit قرار بده.</li>
+            <li>اطلاعات حساس مانند هش رمز عبور را در پاسخ API برنگردان.</li>
+            <li>اگر پیش‌نویس خصوصی است، دسترسی عمومی به آن را محدود کن.</li>
+            <li>برای تولید واقعی، محدودیت تعداد درخواست‌ها و مدیریت امن خطاها را نیز بررسی کن.</li>
+        </ul>
+
+        <div class="note warning">
+            احراز هویت و مجوز دسترسی دو موضوع جدا هستند. JWT معتبر مشخص می‌کند درخواست
+            از طرف چه کاربری آمده است؛ اما به‌تنهایی ثابت نمی‌کند آن کاربر اجازه ویرایش
+            هر مقاله‌ای را دارد.
+        </div>
+    </section>
+
+    <section class="card" id="checklist">
+        <h2>۱۵. چک‌لیست وضعیت پروژه</h2>
+
+        <p>بر اساس آخرین گزارش‌های موجود از کارهای انجام‌شده:</p>
+
+        <ul class="checklist">
+            <li>ساخت بک‌اند با TypeScript و Express</li>
+            <li>تنظیم اتصال TypeORM به MariaDB / MySQL</li>
+            <li>ساخت جدول کاربران با Migration</li>
+            <li>ساخت جدول مقالات با Migration</li>
+            <li>افزودن فیلد هش رمز عبور به کاربران</li>
+            <li>تعریف مسیرهای ثبت‌نام و ورود</li>
+            <li>هش‌کردن رمز عبور با bcrypt</li>
+            <li>صدور و بررسی JWT</li>
+            <li>ساخت Middleware احراز هویت</li>
+            <li>محافظت از مسیرهای ایجاد، ویرایش و حذف مقاله</li>
+            <li>انتقال شناسه مالک مقاله از Body به اطلاعات احراز هویت‌شده</li>
+            <li>تغییر امضای سرویس‌ها برای دریافت شناسه کاربر</li>
+            <li>پیاده‌سازی یا تکمیل فهرست، جست‌وجو و صفحه‌بندی مقالات</li>
+            <li>بررسی وضعیت مقاله و جلوگیری از آدرس تکراری</li>
+            <li>اجرای typecheck و تست درخواست‌ها طبق گزارش کاربر</li>
+        </ul>
+
+        <div class="note">
+            این چک‌لیست بر اساس اطلاعاتی است که در گفتگو گزارش شده‌اند و جایگزین بررسی
+            مستقیم فایل‌های فعلی یا اجرای تست خودکار نیست.
+        </div>
+
+        <h3>موضوعاتی که در ادامه باید بررسی شوند</h3>
+        <ol>
+            <li>تست نهایی جست‌وجو و فیلتر مقالات با داده‌های مختلف.</li>
+            <li>اطمینان از محدودیت مالکیت در ویرایش و حذف مقاله.</li>
+            <li>اطمینان از اینکه پیش‌نویس‌های خصوصی به کاربران عمومی نمایش داده نمی‌شوند.</li>
+            <li>تست خطاهای ورودی نامعتبر، توکن منقضی و مقاله ناموجود.</li>
+            <li>بررسی مدیریت خطاها و اعتبارسنجی همه ورودی‌های API.</li>
+            <li>پس از تأیید این موارد، ادامه توسعه امکانات مقاله.</li>
+        </ol>
+    </section>
+
+    <footer>
+        <p>مستندات آموزشی پروژه بک‌اند مقالات</p>
+        <p>TypeScript · Express · TypeORM · MariaDB · JWT · Zod</p>
+    </footer>
+
+</div>
+</body>
+</html>

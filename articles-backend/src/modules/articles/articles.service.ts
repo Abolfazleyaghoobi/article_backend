@@ -2,6 +2,10 @@ import { articleRepository } from "./articles.repository";
 import type { CreateArticleDto,UpdateArticleDto } from "./articles.dto";
 import { AppError } from "../../common/errors/app.error";
 
+const parseArticleContent = (content: string) => {
+  return JSON.parse(content);
+};
+
 // create a new article
 
 export const createArticle = async (
@@ -19,7 +23,7 @@ export const createArticle = async (
   const article = articleRepository.create({
     title: data.title,
     slug: data.slug,
-    content: data.content,
+    content: JSON.stringify(data.content),
     status: data.status ?? "draft",
     userId,
   });
@@ -74,7 +78,10 @@ export const getAllArticles = async (
   const [articles, total] = await query.getManyAndCount();
 
   return {
-    data: articles,
+    data: articles.map((article) => ({
+  ...article,
+  content: parseArticleContent(article.content),
+})),
     pagination: {
       page: safePage,
       limit: safeLimit,
@@ -102,8 +109,10 @@ export const getArticleById = async (
   ) {
     throw new AppError("مقاله پیدا نشد", 404);
   }
-
-  return article;
+return {
+  ...article,
+  content: parseArticleContent(article.content),
+};
 };
 
 
@@ -133,7 +142,10 @@ export const updateArticle = async (
   articleRepository.merge(article, {
     title: data.title,
     slug: data.slug,
-    content: data.content,
+  content:
+  data.content !== undefined
+    ? JSON.stringify(data.content)
+    : undefined,
     status: data.status,
   });
 

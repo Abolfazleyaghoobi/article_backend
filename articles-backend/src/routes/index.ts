@@ -6,6 +6,8 @@ import { getUserById } from "../modules/users/users.controller";
 import authRouter from "../modules/auth/auth.routes";
 // articles import
 import articlesRouter from "../modules/articles/articles.routes";
+// media import
+import { mediaRouter } from "../modules/media/media.routes";
 
 
 export const apiRouter = Router();
@@ -31,3 +33,7 @@ apiRouter.use("/articles", articlesRouter);
 
 // auth routes
 apiRouter.use("/auth", authRouter);
+
+
+// media routes
+apiRouter.use("/media", mediaRouter);
