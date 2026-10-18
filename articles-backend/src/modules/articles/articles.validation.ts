@@ -74,11 +74,13 @@ export const articleContentSchema = z
   .min(1)
   .max(500);
 
+
 export const createArticleSchema = z.object({
   title: z.string().trim().min(3).max(200),
   slug: z.string().trim().min(3).max(250),
   content: articleContentSchema,
   status: z.enum(["draft", "published"]).optional(),
+  tagIds: z.array(z.number().int().positive()).optional(),
 });
 
 export const updateArticleSchema = z
@@ -87,6 +89,7 @@ export const updateArticleSchema = z
     slug: z.string().trim().min(3).max(250).optional(),
     content: articleContentSchema.optional(),
     status: z.enum(["draft", "published"]).optional(),
+    tagIds: z.array(z.number().int().positive()).optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {
     message: "حداقل یک فیلد برای ویرایش ارسال کنید",

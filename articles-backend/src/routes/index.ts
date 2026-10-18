@@ -9,7 +9,8 @@ import articlesRouter from "../modules/articles/articles.routes";
 // media import
 import { mediaRouter } from "../modules/media/media.routes";
 
-
+// tags import
+import { tagsRouter } from "../modules/tags/tags.routes";
 export const apiRouter = Router();
 
 apiRouter.get("/", (_req, res) => {
@@ -37,3 +38,8 @@ apiRouter.use("/auth", authRouter);
 
 // media routes
 apiRouter.use("/media", mediaRouter);
+
+
+// tags routes
+
+apiRouter.use("/tags", tagsRouter);

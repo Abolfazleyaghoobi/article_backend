@@ -4,7 +4,7 @@ import { DataSource } from "typeorm";
 import { env } from "../config/env";
 import { User } from "../modules/users/entities/user.entity";
 import { Article } from "../modules/articles/entities/article.entity";
-
+import { Tag } from "../modules/tags/entities/tag.entity";
 export const AppDataSource = new DataSource({
   type: "mysql",
   host: env.DB_HOST,
@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   password: env.DB_PASSWORD,
   database: env.DB_DATABASE,
 
-entities: [User, Article],
+entities: [User, Article, Tag],
 migrations: ["articles-backend/src/database/migrations/*.ts"],
 
   synchronize: false,

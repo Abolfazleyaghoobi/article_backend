@@ -1,12 +1,30 @@
 import { articleRepository } from "./articles.repository";
 import type { CreateArticleDto,UpdateArticleDto } from "./articles.dto";
 import { AppError } from "../../common/errors/app.error";
+import { tagRepository } from "../tags/tags.repository";
 
-const parseArticleContent = (content: string) => {
-  return JSON.parse(content);
+const parseArticleContent = (content: unknown) => {
+  if (typeof content === "string") {
+    try {
+      return JSON.parse(content);
+    } catch {
+      throw new AppError(
+        "ساختار محتوای مقاله معتبر نیست",
+        500,
+      );
+    }
+  }
+
+  if (content !== null && typeof content === "object") {
+    return content;
+  }
+
+  throw new AppError(
+    "ساختار محتوای مقاله معتبر نیست",
+    500,
+  );
 };
 
-// create a new article
 
 export const createArticle = async (
   data: CreateArticleDto,
@@ -20,12 +38,34 @@ export const createArticle = async (
     throw new AppError("این آدرس مقاله قبلاً ثبت شده است", 409);
   }
 
+  const tagIds = [...new Set(data.tagIds ?? [])];
+
+  if (
+    tagIds.some(
+      (id) => !Number.isInteger(id) || id < 1,
+    )
+  ) {
+    throw new AppError("شناسه تگ معتبر نیست", 400);
+  }
+
+  const tags = tagIds.length
+  ? await tagRepository
+      .createQueryBuilder("tag")
+      .where("tag.id IN (:...tagIds)", { tagIds })
+      .getMany()
+  : [];
+
+  if (tags.length !== tagIds.length) {
+    throw new AppError("یک یا چند تگ پیدا نشد", 404);
+  }
+
   const article = articleRepository.create({
     title: data.title,
     slug: data.slug,
     content: JSON.stringify(data.content),
     status: data.status ?? "draft",
     userId,
+    tags,
   });
 
   return articleRepository.save(article);
@@ -97,11 +137,19 @@ export const getArticleById = async (
   id: number,
   viewerUserId?: number,
 ) => {
-  const article = await articleRepository.findOneBy({ id });
+ const article = await articleRepository.findOne({
+  where: { id },
+  relations: {
+    tags: true,
+  },
+});
 
   if (!article) {
     throw new AppError("مقاله پیدا نشد", 404);
   }
+  console.log("ARTICLE CONTENT:", article.content);
+console.log("CONTENT TYPE:", typeof article.content);
+
 
   if (
     article.status !== "published" &&
@@ -118,15 +166,30 @@ return {
 
 // update article by id
 
+
 export const updateArticle = async (
   id: number,
   data: UpdateArticleDto,
   userId: number,
 ) => {
-  const article = await getArticleById(id);
+
+const article = await articleRepository.findOne({
+  where: { id },
+  relations: {
+    tags: true,
+  },
+});
+
+if (!article) {
+  throw new AppError("مقاله پیدا نشد", 404);
+}
+
 
   if (article.userId !== userId) {
-    throw new AppError("شما اجازه ویرایش این مقاله را ندارید", 403);
+    throw new AppError(
+      "شما اجازه ویرایش این مقاله را ندارید",
+      403,
+    );
   }
 
   if (data.slug && data.slug !== article.slug) {
@@ -135,17 +198,45 @@ export const updateArticle = async (
     });
 
     if (existingArticle) {
-      throw new AppError("این آدرس مقاله قبلاً ثبت شده است", 409);
+      throw new AppError(
+        "این آدرس مقاله قبلاً ثبت شده است",
+        409,
+      );
     }
+  }
+
+  if (data.tagIds !== undefined) {
+    const tagIds = [...new Set(data.tagIds)];
+
+    if (
+      tagIds.some(
+        (tagId) => !Number.isInteger(tagId) || tagId < 1,
+      )
+    ) {
+      throw new AppError("شناسه تگ معتبر نیست", 400);
+    }
+
+    const tags = tagIds.length
+      ? await tagRepository
+          .createQueryBuilder("tag")
+          .where("tag.id IN (:...tagIds)", { tagIds })
+          .getMany()
+      : [];
+
+    if (tags.length !== tagIds.length) {
+      throw new AppError("یک یا چند تگ پیدا نشد", 404);
+    }
+
+    article.tags = tags;
   }
 
   articleRepository.merge(article, {
     title: data.title,
     slug: data.slug,
-  content:
-  data.content !== undefined
-    ? JSON.stringify(data.content)
-    : undefined,
+    content:
+      data.content !== undefined
+        ? JSON.stringify(data.content)
+        : undefined,
     status: data.status,
   });
 

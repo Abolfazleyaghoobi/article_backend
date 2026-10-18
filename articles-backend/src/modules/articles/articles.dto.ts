@@ -1,3 +1,4 @@
+
 import type { ArticleContent } from "./article-content.types";
 
 export interface CreateArticleDto {
@@ -5,6 +6,7 @@ export interface CreateArticleDto {
   slug: string;
   content: ArticleContent;
   status?: "draft" | "published";
+  tagIds?: number[];
 }
 
 export interface UpdateArticleDto {
@@ -12,4 +14,5 @@ export interface UpdateArticleDto {
   slug?: string;
   content?: ArticleContent;
   status?: "draft" | "published";
+  tagIds?: number[];
 }

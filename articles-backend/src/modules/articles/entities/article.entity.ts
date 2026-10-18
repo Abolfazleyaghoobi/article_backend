@@ -1,4 +1,3 @@
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,10 +6,11 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from "typeorm";
-
 import { User } from "../../users/entities/user.entity";
-
+import { Tag } from "../../tags/entities/tag.entity";
 @Entity("articles")
 export class Article {
   @PrimaryGeneratedColumn()
@@ -33,7 +33,11 @@ export class Article {
   author!: User;
 
   @Column({ type: "int" })
-userId!: number;
+  userId!: number;
+
+  @ManyToMany(() => Tag, (tag) => tag.articles)
+  @JoinTable({ name: "article_tags" })
+  tags!: Tag[];
 
   @CreateDateColumn()
   createdAt!: Date;
