@@ -7,11 +7,16 @@ import { errorMiddleware } from "./common/middleware/error.middleware";
 import { notFoundMiddleware } from "./common/middleware/not-found.middleware";
 import { apiRouter } from "./routes";
 import { appConfig } from "./config/app.config";
+
+
+import swaggerUi from "swagger-ui-express";
+
 const app = express();
 
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
 // upload file
 app.use("/uploads", express.static("articles-backend/uploads"));
 

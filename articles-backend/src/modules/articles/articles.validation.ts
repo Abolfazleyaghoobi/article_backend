@@ -74,11 +74,24 @@ export const articleContentSchema = z
   .min(1)
   .max(500);
 
+const coverImageSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(1000)
+  .refine(
+  (value) => /^\/uploads\/[a-zA-Z0-9_-]+\.webp$/i.test(value),
+  "آدرس تصویر کاور معتبر نیست",
+)
+  .nullable()
+  .optional();
+
 
 export const createArticleSchema = z.object({
   title: z.string().trim().min(3).max(200),
   slug: z.string().trim().min(3).max(250),
   content: articleContentSchema,
+  coverImage: coverImageSchema,
   status: z.enum(["draft", "published"]).optional(),
   tagIds: z.array(z.number().int().positive()).optional(),
 });
@@ -88,6 +101,7 @@ export const updateArticleSchema = z
     title: z.string().trim().min(3).max(200).optional(),
     slug: z.string().trim().min(3).max(250).optional(),
     content: articleContentSchema.optional(),
+    coverImage: coverImageSchema,
     status: z.enum(["draft", "published"]).optional(),
     tagIds: z.array(z.number().int().positive()).optional(),
   })

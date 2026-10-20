@@ -7,6 +7,7 @@ export interface CreateArticleDto {
   content: ArticleContent;
   status?: "draft" | "published";
   tagIds?: number[];
+  coverImage?: string | null;
 }
 
 export interface UpdateArticleDto {
@@ -15,4 +16,5 @@ export interface UpdateArticleDto {
   content?: ArticleContent;
   status?: "draft" | "published";
   tagIds?: number[];
+  coverImage?: string | null;
 }

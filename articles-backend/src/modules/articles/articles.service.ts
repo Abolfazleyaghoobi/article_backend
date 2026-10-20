@@ -63,6 +63,7 @@ export const createArticle = async (
     title: data.title,
     slug: data.slug,
     content: JSON.stringify(data.content),
+    coverImage: data.coverImage ?? null,
     status: data.status ?? "draft",
     userId,
     tags,
@@ -237,6 +238,10 @@ if (!article) {
       data.content !== undefined
         ? JSON.stringify(data.content)
         : undefined,
+        coverImage:
+  data.coverImage !== undefined
+    ? data.coverImage
+    : undefined,
     status: data.status,
   });
 

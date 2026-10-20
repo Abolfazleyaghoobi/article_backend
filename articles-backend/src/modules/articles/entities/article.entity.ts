@@ -24,6 +24,9 @@ export class Article {
 
   @Column({ type: "text" })
   content!: string;
+  
+  @Column({ type: "varchar", length: 1000, nullable: true })
+coverImage!: string | null;
 
   @Column({ type: "varchar", length: 30, default: "draft" })
   status!: "draft" | "published";

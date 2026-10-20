@@ -1,0 +1,1013 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="راهنمای کامل مراحل توسعه بک‌اند سایت مقالات با TypeScript، Express، TypeORM و MariaDB">
+    <title>گزارش پیشرفت بک‌اند مقالات | آموزش و نکات کلیدی</title>
+
+    <style>
+        :root {
+            --background: #f4f6fa;
+            --surface: #ffffff;
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --success: #15803d;
+            --success-light: #f0fdf4;
+            --warning: #b45309;
+            --warning-light: #fffbeb;
+            --danger: #b91c1c;
+            --text: #1f2937;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --code-background: #111827;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            background: var(--background);
+            color: var(--text);
+            font-family: Tahoma, Arial, sans-serif;
+            line-height: 2;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            padding: 35px 25px;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            border-radius: 18px;
+            margin-bottom: 24px;
+        }
+
+        header h1 {
+            margin-top: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin-bottom: 0;
+            color: #dbeafe;
+        }
+
+        section {
+            background: var(--surface);
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            margin-bottom: 22px;
+        }
+
+        h2 {
+            color: #1d4ed8;
+            font-size: 22px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        h3 {
+            font-size: 17px;
+            margin-top: 24px;
+        }
+
+        p, li {
+            font-size: 14px;
+        }
+
+        code, pre {
+            font-family: "DejaVu Sans Mono", monospace;
+            direction: ltr;
+            text-align: left;
+        }
+
+        code {
+            overflow-wrap: anywhere;
+        }
+
+        pre {
+            background: var(--code-background);
+            color: #e5e7eb;
+            padding: 18px;
+            border-radius: 10px;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.8;
+            font-size: 13px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .inline-code {
+            display: inline-block;
+            background: #eef2ff;
+            color: #3730a3;
+            padding: 1px 7px;
+            border-radius: 5px;
+            direction: ltr;
+            font-family: monospace;
+        }
+
+        .note {
+            padding: 14px 16px;
+            border-right: 4px solid var(--primary);
+            background: var(--primary-light);
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+
+        .success {
+            border-right-color: var(--success);
+            background: var(--success-light);
+        }
+
+        .warning {
+            border-right-color: var(--warning);
+            background: var(--warning-light);
+        }
+
+        .danger {
+            border-right-color: var(--danger);
+            background: #fef2f2;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            margin: 8px 0;
+        }
+
+        .checklist li::before {
+            content: "✓ ";
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .step {
+            display: inline-block;
+            color: #1d4ed8;
+            background: #dbeafe;
+            border-radius: 6px;
+            padding: 2px 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid var(--border);
+            text-align: right;
+            vertical-align: top;
+        }
+
+        th {
+            background: #eff6ff;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            padding: 20px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            section {
+                padding: 16px;
+            }
+
+            header h1 {
+                font-size: 23px;
+            }
+
+            h2 {
+                font-size: 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<main>
+
+    <header>
+        <h1>گزارش کامل پیشرفت بک‌اند سایت مقالات</h1>
+        <p>مستند آموزشی تغییرات، خطاها، راه‌حل‌ها و نکات کلیدی پروژه</p>
+        <p>فناوری‌ها: TypeScript، Express، TypeORM، MariaDB، Zod و JWT</p>
+    </header>
+
+    <section>
+        <h2>۱. وضعیت کلی پروژه</h2>
+
+        <p>
+            پروژه در مسیر زیر قرار دارد و با استفاده از TypeScript و Express
+            توسعه داده شده است.
+        </p>
+
+        <pre><code>/home/abolfazle/practiceNestjs/articles-backend</code></pre>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>بخش</th>
+                    <th>وضعیت</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ثبت‌نام و ورود با JWT</td>
+                    <td>قبلاً پیاده‌سازی شده</td>
+                </tr>
+                <tr>
+                    <td>ساخت و ویرایش مقاله</td>
+                    <td>پیاده‌سازی شده</td>
+                </tr>
+                <tr>
+                    <td>انتشار مقاله</td>
+                    <td>تست موفق</td>
+                </tr>
+                <tr>
+                    <td>مدیریت تگ‌ها</td>
+                    <td>پیاده‌سازی شده</td>
+                </tr>
+                <tr>
+                    <td>اتصال مقاله به تگ‌ها</td>
+                    <td>تست موفق</td>
+                </tr>
+                <tr>
+                    <td>ویرایش تگ‌های مقاله</td>
+                    <td>تست موفق</td>
+                </tr>
+                <tr>
+                    <td>بررسی TypeScript</td>
+                    <td>دستور typecheck موفق</td>
+                </tr>
+                <tr>
+                    <td>فیلتر مقالات بر اساس تگ</td>
+                    <td>مرحله بعدی پروژه</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note success">
+            نکته: در این مستند، بخش‌هایی که قبلاً ساخته شده‌اند از تغییرات و
+            تست‌های انجام‌شده در جلسه اخیر جدا شده‌اند.
+        </div>
+    </section>
+
+    <section>
+        <h2>۲. مفهوم تگ و رابطه آن با مقاله</h2>
+
+        <p>
+            تگ برای دسته‌بندی موضوعی مقاله‌ها استفاده می‌شود. برای مثال،
+            یک مقاله ممکن است هم‌زمان تگ‌های TypeScript، JavaScript و Backend
+            داشته باشد.
+        </p>
+
+        <p>
+            رابطه مقاله و تگ از نوع چندبه‌چند یا
+            <span class="inline-code">Many-to-Many</span>
+            است؛ یعنی هر مقاله می‌تواند چند تگ داشته باشد و هر تگ هم می‌تواند
+            به چند مقاله متصل شود.
+        </p>
+
+        <h3>موجودیت Tag</h3>
+
+        <p>فایل موجودیت تگ:</p>
+
+        <pre><code>articles-backend/src/modules/tags/entities/tag.entity.ts</code></pre>
+
+        <p>بخش رابطه در موجودیت تگ به این شکل است:</p>
+
+        <pre><code>@ManyToMany(() =&gt; Article, (article) =&gt; article.tags)
+articles!: Article[];</code></pre>
+
+        <h3>موجودیت Article</h3>
+
+        <p>در موجودیت مقاله، رابطه معکوس تعریف شده است:</p>
+
+        <pre><code>@ManyToMany(() =&gt; Tag, (tag) =&gt; tag.articles)
+@JoinTable({ name: "article_tags" })
+tags!: Tag[];</code></pre>
+
+        <p>
+            جدول واسط <span class="inline-code">article_tags</span>
+            شناسه مقاله و شناسه تگ را به یکدیگر متصل می‌کند.
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ستون</th>
+                    <th>معنا</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>articlesId</code></td>
+                    <td>شناسه مقاله</td>
+                </tr>
+                <tr>
+                    <td><code>tagsId</code></td>
+                    <td>شناسه تگ</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note">
+            نکته کلیدی: وقتی از <code>ManyToMany</code> استفاده می‌کنیم،
+            TypeORM رابطه را از طریق جدول واسط مدیریت می‌کند. لازم نیست برای
+            هر تگ یک ستون جداگانه در جدول مقالات بسازیم.
+        </div>
+    </section>
+
+    <section>
+        <h2>۳. پذیرش tagIds در DTO</h2>
+
+        <p>
+            برای ارسال شناسه تگ‌ها از طریق API، فیلد
+            <code>tagIds</code> به DTOهای ساخت و ویرایش مقاله اضافه شد.
+        </p>
+
+        <p>فایل:</p>
+
+        <pre><code>articles-backend/src/modules/articles/articles.dto.ts</code></pre>
+
+        <pre><code>export interface CreateArticleDto {
+  title: string;
+  slug: string;
+  content: ArticleContent;
+  status?: "draft" | "published";
+  tagIds?: number[];
+}
+
+export interface UpdateArticleDto {
+  title?: string;
+  slug?: string;
+  content?: ArticleContent;
+  status?: "draft" | "published";
+  tagIds?: number[];
+}</code></pre>
+
+        <h3>چرا tagIds آرایه است؟</h3>
+
+        <p>
+            چون مقاله می‌تواند چند تگ داشته باشد، شناسه تگ‌ها را در قالب آرایه
+            ارسال می‌کنیم. برای مثال:
+        </p>
+
+        <pre><code>{
+  "tagIds": [1, 2, 3]
+}</code></pre>
+
+        <p>
+            این مقدار به معنای انتخاب تگ‌های دارای شناسه‌های ۱، ۲ و ۳ است.
+            اینترفیس TypeScript به‌تنهایی ورودی HTTP را اعتبارسنجی نمی‌کند؛
+            برای همین از Zod نیز استفاده می‌کنیم.
+        </p>
+    </section>
+
+    <section>
+        <h2>۴. علت اصلی کارنکردن tagIds هنگام ساخت مقاله</h2>
+
+        <p>
+            در ابتدا درخواست ساخت مقاله شامل <code>tagIds</code> بود، اما
+            سرویس مقدار خالی دریافت می‌کرد.
+        </p>
+
+        <h3>دلیل خطا چه بود؟</h3>
+
+        <p>
+            در فایل کنترلر، <code>createArticleSchema</code> فیلد
+            <code>tagIds</code> را تعریف نکرده بود.
+        </p>
+
+        <p>
+            Zod به‌صورت پیش‌فرض کلیدهای ناشناخته را از خروجی یک شیء معمولی
+            حذف می‌کند. بنابراین وقتی این کد اجرا می‌شد:
+        </p>
+
+        <pre><code>const data = createArticleSchema.parse(req.body);</code></pre>
+
+        <p>
+            مقدار <code>tagIds</code> که در اسکیما تعریف نشده بود، از خروجی
+            اعتبارسنجی حذف می‌شد.
+        </p>
+
+        <h3>اصلاح انجام‌شده</h3>
+
+        <pre><code>tagIds: z.array(z.number().int().positive()).optional(),</code></pre>
+
+        <p>
+            این فیلد باید داخل <code>z.object({...})</code> در اسکیما ساخت
+            مقاله قرار داشته باشد.
+        </p>
+
+        <div class="note success">
+            نتیجه: پس از پذیرش tagIds در اسکیما، سرویس می‌تواند شناسه‌ها را
+            دریافت کند و رابطه مقاله و تگ را ذخیره کند.
+        </div>
+    </section>
+
+    <section>
+        <h2>۵. اعتبارسنجی و اتصال تگ‌ها هنگام ساخت مقاله</h2>
+
+        <p>
+            در فایل <code>articles.service.ts</code>، سرویس ساخت مقاله
+            ابتدا تکراری نبودن آدرس مقاله را بررسی می‌کند؛ سپس تگ‌ها را
+            اعتبارسنجی و بازیابی می‌کند.
+        </p>
+
+        <h3>حذف شناسه‌های تکراری</h3>
+
+        <pre><code>const tagIds = [...new Set(data.tagIds ?? [])];</code></pre>
+
+        <p>
+            اگر ورودی شامل <code>[1, 1, 2]</code> باشد، نتیجه
+            <code>[1, 2]</code> خواهد بود.
+        </p>
+
+        <h3>بررسی معتبر بودن شناسه‌ها</h3>
+
+        <pre><code>if (
+  tagIds.some(
+    (id) =&gt; !Number.isInteger(id) || id &lt; 1,
+  )
+) {
+  throw new AppError("شناسه تگ معتبر نیست", 400);
+}</code></pre>
+
+        <p>
+            این بررسی شناسه‌های نامعتبر مانند صفر، اعداد منفی و اعداد اعشاری
+            را رد می‌کند.
+        </p>
+
+        <h3>پیداکردن تگ‌ها در دیتابیس</h3>
+
+        <pre><code>const tags = tagIds.length
+  ? await tagRepository
+      .createQueryBuilder("tag")
+      .where("tag.id IN (:...tagIds)", { tagIds })
+      .getMany()
+  : [];</code></pre>
+
+        <p>
+            سپس تعداد تگ‌های پیدا‌شده با تعداد شناسه‌های درخواستی مقایسه
+            می‌شود:
+        </p>
+
+        <pre><code>if (tags.length !== tagIds.length) {
+  throw new AppError("یک یا چند تگ پیدا نشد", 404);
+}</code></pre>
+
+        <h3>ذخیره مقاله همراه تگ‌ها</h3>
+
+        <pre><code>const article = articleRepository.create({
+  title: data.title,
+  slug: data.slug,
+  content: JSON.stringify(data.content),
+  status: data.status ?? "draft",
+  userId,
+  tags,
+});
+
+return articleRepository.save(article);</code></pre>
+
+        <div class="note">
+            نکته امنیتی: کلاینت نباید بتواند با ارسال یک شناسه ساختگی، رابطه‌ای
+            با تگی ناموجود ایجاد کند. شناسه‌ها باید اعتبارسنجی شوند و وجود
+            تمام تگ‌های انتخاب‌شده در دیتابیس بررسی شود.
+        </div>
+    </section>
+
+    <section>
+        <h2>۶. ویرایش تگ‌های مقاله</h2>
+
+        <p>
+            تابع <code>updateArticle</code> برای تغییر تگ‌ها اصلاح شد.
+            همچنین فیلد <code>tagIds</code> به
+            <code>updateArticleSchema</code> اضافه شد.
+        </p>
+
+        <h3>قانون مهم در ویرایش</h3>
+
+        <pre><code>if (data.tagIds !== undefined) {
+  // اعتبارسنجی و بازیابی تگ‌های جدید
+  // جایگزینی رابطه قبلی
+}</code></pre>
+
+        <p>
+            بررسی <code>!== undefined</code> اهمیت زیادی دارد؛ چون نبودن
+            فیلد و ارسال آرایه خالی دو معنای متفاوت دارند.
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ورودی PATCH</th>
+                    <th>رفتار مورد انتظار</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>{"tagIds":[1]}</code></td>
+                    <td>تگ‌های مقاله با تگ شماره ۱ جایگزین می‌شوند.</td>
+                </tr>
+                <tr>
+                    <td><code>{"tagIds":[1,2]}</code></td>
+                    <td>تگ‌های شماره ۱ و ۲ به مقاله متصل می‌شوند.</td>
+                </tr>
+                <tr>
+                    <td><code>{"tagIds":[]}</code></td>
+                    <td>تمام ارتباط‌های تگ مقاله حذف می‌شوند.</td>
+                </tr>
+                <tr>
+                    <td><code>{"status":"published"}</code></td>
+                    <td>تگ‌های قبلی دست‌نخورده می‌مانند.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>جایگزینی تگ‌ها</h3>
+
+        <pre><code>article.tags = tags;</code></pre>
+
+        <p>
+            بعد از جایگزینی تگ‌ها، مقاله با استفاده از مخزن TypeORM ذخیره
+            می‌شود:
+        </p>
+
+        <pre><code>return articleRepository.save(article);</code></pre>
+
+        <p>
+            این کار به TypeORM اجازه می‌دهد تغییرات رابطه را در جدول واسط
+            مدیریت کند.
+        </p>
+
+        <div class="note warning">
+            توجه: پیش از استفاده از این کد، مطمئن شوید
+            <code>updateArticleSchema</code> واقعاً فیلد
+            <code>tagIds</code> را می‌پذیرد. اگر Zod آن را حذف کند،
+            سرویس هیچ‌وقت تغییر تگ‌ها را دریافت نمی‌کند.
+        </div>
+    </section>
+
+    <section>
+        <h2>۷. خطای پیدا نشدن مقاله و بررسی مالکیت</h2>
+
+        <p>
+            هنگام ویرایش مقاله شماره ۱۳، پیام «مقاله پیدا نشد» دریافت شد.
+            بخشی از علت، نحوه فراخوانی <code>getArticleById</code> بود.
+        </p>
+
+        <p>تابع دریافت مقاله شرطی مشابه این داشت:</p>
+
+        <pre><code>if (
+  article.status !== "published" &amp;&amp;
+  article.userId !== viewerUserId
+) {
+  throw new AppError("مقاله پیدا نشد", 404);
+}</code></pre>
+
+        <p>
+            مقاله پیش‌نویس فقط در صورتی قابل مشاهده است که شناسه نویسنده
+            با کاربر درخواست‌دهنده مطابقت داشته باشد.
+        </p>
+
+        <p>
+            در تابع ویرایش، ابتدا مقاله را بدون شناسه کاربر به
+            <code>getArticleById</code> می‌دادیم؛ به همین دلیل مقاله پیش‌نویس
+            ممکن بود پیدا نشود.
+        </p>
+
+        <h3>اصلاح اولیه</h3>
+
+        <pre><code>const article = await getArticleById(id, userId);</code></pre>
+
+        <p>
+            بعداً، به دلیل مشکل پردازش محتوای مقاله، نحوه دریافت مقاله در
+            <code>updateArticle</code> تغییر کرد تا نسخه خام موجودیت از
+            دیتابیس گرفته شود.
+        </p>
+
+        <pre><code>const article = await articleRepository.findOne({
+  where: { id },
+  relations: {
+    tags: true,
+  },
+});
+
+if (!article) {
+  throw new AppError("مقاله پیدا نشد", 404);
+}</code></pre>
+
+        <p>
+            پس از آن، بررسی مالکیت باید حتماً باقی بماند:
+        </p>
+
+        <pre><code>if (article.userId !== userId) {
+  throw new AppError(
+    "شما اجازه ویرایش این مقاله را ندارید",
+    403,
+  );
+}</code></pre>
+
+        <div class="note danger">
+            نکته امنیتی بسیار مهم: دریافت مستقیم مقاله از مخزن نباید باعث
+            حذف کنترل دسترسی شود. هر کاربر باید فقط اجازه ویرایش مقاله‌ای
+            را داشته باشد که مالک آن است، مگر اینکه سیاست مجوز دیگری
+            به‌صورت آگاهانه پیاده‌سازی شده باشد.
+        </div>
+    </section>
+
+    <section>
+        <h2>۸. خطای JSON در محتوای مقاله</h2>
+
+        <p>
+            هنگام اجرای PATCH، خطای زیر در ترمینال ظاهر شد:
+        </p>
+
+        <pre><code>SyntaxError: "[object Object]" is not valid JSON</code></pre>
+
+        <p>
+            ابتدا تابع <code>parseArticleContent</code> فقط انتظار رشته
+            داشت و آن را با <code>JSON.parse</code> تبدیل می‌کرد.
+        </p>
+
+        <pre><code>const parseArticleContent = (content: string) =&gt; {
+  return JSON.parse(content);
+};</code></pre>
+
+        <p>
+            بررسی خروجی ترمینال نشان داد:
+        </p>
+
+        <pre><code>ARTICLE CONTENT: [object Object]
+CONTENT TYPE: string</code></pre>
+
+        <p>
+            بنابراین مشکل فقط یک خطای TypeScript نبود. مقدار نامعتبر
+            <code>[object Object]</code> واقعاً داخل ستون
+            <code>content</code> مقاله شماره ۱۳ ذخیره شده بود.
+        </p>
+
+        <h3>چرا این اتفاق می‌افتد؟</h3>
+
+        <p>
+            اگر یک آبجکت جاوااسکریپت مستقیماً به رشته تبدیل شود، معمولاً
+            نتیجه <code>[object Object]</code> خواهد بود. این مقدار
+            JSON معتبر نیست.
+        </p>
+
+        <p>برای تبدیل صحیح آبجکت به JSON از این روش استفاده می‌کنیم:</p>
+
+        <pre><code>JSON.stringify(data.content)</code></pre>
+
+        <p>و برای تبدیل رشته JSON به مقدار جاوااسکریپت:</p>
+
+        <pre><code>JSON.parse(content)</code></pre>
+
+        <h3>بررسی نوع ستون دیتابیس</h3>
+
+        <p>دستور زیر اجرا شد:</p>
+
+        <pre><code>SHOW COLUMNS FROM articles LIKE 'content';</code></pre>
+
+        <p>
+            نوع ستون <code>content</code> برابر <code>TEXT</code> بود.
+            این نوع ستون می‌تواند رشته JSON را ذخیره کند؛ پس برای این
+            مشکل نیازی به تغییر نوع ستون نبود.
+        </p>
+
+        <h3>اصلاح محتوای خراب مقاله شماره ۱۳</h3>
+
+        <p>
+            چون محتوای اصلی مقاله در قالب معتبر ذخیره نشده بود، یک محتوای
+            معتبر جایگزین شد.
+        </p>
+
+        <pre><code>UPDATE articles
+SET content = '[{"type":"paragraph","text":"بررسی اتصال مقاله به تگ"}]'
+WHERE id = 13;</code></pre>
+
+        <p>
+            این دستور فقط محتوای مقاله با شناسه ۱۳ را تغییر داد. محتوای
+            اصلی خراب‌شده از این رشته قابل بازیابی خودکار نبود.
+        </p>
+
+        <div class="note warning">
+            در محیط واقعی، پیش از اجرای UPDATE مستقیم روی دیتابیس، از داده‌ها
+            نسخه پشتیبان بگیرید. تغییر دستی محتوا فقط زمانی مناسب است که
+            ساختار محتوای مورد انتظار را بشناسید.
+        </div>
+    </section>
+
+    <section>
+        <h2>۹. اصلاح parseArticleContent</h2>
+
+        <p>
+            برای جلوگیری از اجرای JSON.parse روی آبجکت، تابع به شکل زیر
+            تغییر کرد:
+        </p>
+
+        <pre><code>const parseArticleContent = (content: unknown) =&gt; {
+  if (typeof content === "string") {
+    try {
+      return JSON.parse(content);
+    } catch {
+      throw new AppError(
+        "ساختار محتوای مقاله معتبر نیست",
+        500,
+      );
+    }
+  }
+
+  if (content !== null &amp;&amp; typeof content === "object") {
+    return content;
+  }
+
+  throw new AppError(
+    "ساختار محتوای مقاله معتبر نیست",
+    500,
+  );
+};</code></pre>
+
+        <p>
+            این تابع اگر رشته JSON دریافت کند، آن را تجزیه می‌کند و اگر
+            از قبل یک آبجکت باشد، آن را بدون تجزیه دوباره برمی‌گرداند.
+        </p>
+
+        <p>
+            با این حال، این تابع به‌تنهایی محتوای خراب‌شده‌ای مثل
+            <code>[object Object]</code> را بازیابی نمی‌کند. در آن وضعیت،
+            باید داده اصلاح شود یا خطای کنترل‌شده برگردانده شود.
+        </p>
+
+        <div class="note">
+            نکته: بررسی <code>typeof content === "object"</code> به‌تنهایی
+            اعتبار ساختار مقاله را تضمین نمی‌کند. برای اعتبارسنجی کامل،
+            باید شکل آرایه و نوع بلوک‌های محتوا هم بررسی شود.
+        </div>
+    </section>
+
+    <section>
+        <h2>۱۰. انتشار مقاله با PATCH</h2>
+
+        <p>
+            برای انتشار مقاله، مقدار وضعیت از <code>draft</code> به
+            <code>published</code> تغییر داده می‌شود.
+        </p>
+
+        <p>درخواست تست‌شده:</p>
+
+        <pre><code>PATCH http://localhost:3100/api/v1/articles/13</code></pre>
+
+        <p>بدنه درخواست:</p>
+
+        <pre><code>{
+  "status": "published"
+}</code></pre>
+
+        <p>مقادیر وضعیت در پروژه:</p>
+
+        <ul>
+            <li><code>draft</code>: مقاله پیش‌نویس است.</li>
+            <li><code>published</code>: مقاله منتشر شده است.</li>
+        </ul>
+
+        <p>
+            در این پروژه، امکان انتشار از طریق ویرایش مقاله پیاده‌سازی شده
+            و درخواست انتشار با موفقیت تست شد.
+        </p>
+
+        <div class="note warning">
+            انتشار باید تابع قوانین مالکیت و مجوزهای برنامه باشد.
+            همچنین برای نمایش عمومی مقاله‌ها، فیلتر وضعیت
+            <code>published</code> باید در APIهای عمومی اعمال شود.
+        </div>
+    </section>
+
+    <section>
+        <h2>۱۱. تست اتصال تگ به مقاله</h2>
+
+        <p>
+            پس از اصلاح اسکیما و سرویس، درخواست ویرایش تگ‌ها برای مقاله
+            شماره ۱۳ با موفقیت اجرا شد.
+        </p>
+
+        <pre><code>PATCH http://localhost:3100/api/v1/articles/13</code></pre>
+
+        <p>بدنه درخواست:</p>
+
+        <pre><code>{
+  "tagIds": [1]
+}</code></pre>
+
+        <p>
+            نتیجه تست موفق بود و تگ مقاله با شناسه تگ شماره ۱ جایگزین شد.
+            همچنین مشخص شد که تغییر وضعیت انتشار و تغییر تگ‌ها می‌توانند
+            جداگانه انجام شوند.
+        </p>
+
+        <h3>تست مستقیم دیتابیس</h3>
+
+        <p>
+            برای بررسی ارتباط‌ها می‌توان از دستور زیر استفاده کرد:
+        </p>
+
+        <pre><code>SELECT *
+FROM article_tags
+WHERE articlesId = 13;</code></pre>
+
+        <p>
+            اگر ارتباط ذخیره شده باشد، باید ردیفی با شناسه مقاله ۱۳ و
+            شناسه تگ انتخاب‌شده مشاهده شود.
+        </p>
+    </section>
+
+    <section>
+        <h2>۱۲. پاک‌سازی کد و بررسی TypeScript</h2>
+
+        <p>
+            هنگام بررسی مشکل، یک دستور موقت برای چاپ شناسه تگ‌ها و تگ‌های
+            پیدا‌شده اضافه شده بود:
+        </p>
+
+        <pre><code>console.log("tagIds:", tagIds, "found tags:", tags);</code></pre>
+
+        <p>
+            بعد از موفقیت تست‌ها، این خط حذف شد تا خروجی ترمینال تمیز بماند.
+        </p>
+
+        <p>سپس دستور زیر اجرا شد:</p>
+
+        <pre><code>npm run typecheck</code></pre>
+
+        <div class="note success">
+            نتیجه: دستور بررسی TypeScript بدون خطا اجرا شد.
+        </div>
+
+        <p>
+            این دستور خطاهای نوعی TypeScript را بررسی می‌کند؛ اما به‌تنهایی
+            تضمین نمی‌کند که تمام درخواست‌های API یا رفتارهای دیتابیس
+            درست کار می‌کنند. تست‌های API همچنان ضروری هستند.
+        </p>
+    </section>
+
+    <section>
+        <h2>۱۳. راهنمای تست APIها</h2>
+
+        <p>
+            سرور توسعه از دستور زیر اجرا می‌شود:
+        </p>
+
+        <pre><code>npm run dev</code></pre>
+
+        <p>
+            آدرس پایه API:
+        </p>
+
+        <pre><code>http://localhost:3100/api/v1</code></pre>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>عملیات</th>
+                    <th>روش</th>
+                    <th>مسیر</th>
+                    <th>هدف</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>دریافت مقاله</td>
+                    <td><code>GET</code></td>
+                    <td><code>/articles/13</code></td>
+                    <td>بررسی اطلاعات مقاله</td>
+                </tr>
+                <tr>
+                    <td>انتشار مقاله</td>
+                    <td><code>PATCH</code></td>
+                    <td><code>/articles/13</code></td>
+                    <td>تغییر status به published</td>
+                </tr>
+                <tr>
+                    <td>تغییر تگ مقاله</td>
+                    <td><code>PATCH</code></td>
+                    <td><code>/articles/13</code></td>
+                    <td>جایگزینی تگ‌های مقاله</td>
+                </tr>
+                <tr>
+                    <td>مشاهده تگ‌ها</td>
+                    <td><code>GET</code></td>
+                    <td><code>/tags</code></td>
+                    <td>دریافت فهرست تگ‌ها</td>
+                </tr>
+                <tr>
+                    <td>دریافت تگ</td>
+                    <td><code>GET</code></td>
+                    <td><code>/tags/1</code></td>
+                    <td>دریافت یک تگ</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            برای درخواست‌های محافظت‌شده، توکن ورود را در Postman از مسیر
+            <code>Authorization → Bearer Token</code> وارد کنید.
+        </p>
+
+        <div class="note">
+            شناسه مقاله ۱۳ در این مستند برای مثال استفاده شده است. شناسه‌ها
+            به دیتابیس فعلی وابسته‌اند و ممکن است در محیط دیگری متفاوت باشند.
+        </div>
+    </section>
+
+    <section>
+        <h2>۱۴. نکات کلیدی که باید به خاطر بسپاریم</h2>
+
+        <ul class="checklist">
+            <li>فیلدهای درخواست باید در اسکیماهای Zod تعریف شوند.</li>
+            <li>DTO به‌تنهایی ورودی HTTP را اعتبارسنجی نمی‌کند.</li>
+            <li>برای ذخیره آرایه یا آبجکت در ستون متنی از JSON.stringify استفاده می‌کنیم.</li>
+            <li>برای خواندن JSON معتبر از JSON.parse استفاده می‌کنیم.</li>
+            <li>رشته [object Object] محتوای JSON معتبر نیست.</li>
+            <li>پیش از ساخت رابطه، وجود تگ‌های انتخاب‌شده را بررسی می‌کنیم.</li>
+            <li>در PATCH، فیلد ارسال‌نشده با آرایه خالی یکسان نیست.</li>
+            <li>برای جایگزینی رابطه تگ‌ها، مقدار article.tags را تنظیم می‌کنیم.</li>
+            <li>در ویرایش مقاله باید مالکیت مقاله بررسی شود.</li>
+            <li>نمایش عمومی مقاله باید فقط وضعیت‌های مجاز را برگرداند.</li>
+            <li>خطاهای دیتابیس و API باید کنترل‌شده و قابل فهم باشند.</li>
+            <li>پس از هر تغییر مهم، هم typecheck و هم تست API انجام می‌دهیم.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>۱۵. مرحله بعدی پروژه</h2>
+
+        <p>
+            مرحله بعد، اضافه‌کردن فیلتر مقالات بر اساس شناسه تگ است.
+            هدف این است که کاربر بتواند مقاله‌های مرتبط با یک تگ را دریافت کند.
+        </p>
+
+        <h3>نمونه درخواست موردنظر</h3>
+
+        <pre><code>GET http://localhost:3100/api/v1/articles?tagId=1</code></pre>
+
+        <p>
+            این درخواست باید مقاله‌هایی را برگرداند که به تگ شماره ۱
+            متصل هستند؛ البته محدودیت‌های دسترسی و وضعیت انتشار باید
+            همچنان رعایت شوند.
+        </p>
+
+        <h3>از کجا ادامه می‌دهیم؟</h3>
+
+        <ol>
+            <li>بازکردن فایل <code>articles.controller.ts</code></li>
+            <li>پیداکردن تابع <code>getAllArticlesController</code></li>
+            <li>بررسی نحوه دریافت پارامترهای صفحه‌بندی و جست‌وجو</li>
+            <li>اضافه‌کردن پارامتر <code>tagId</code> به درخواست</li>
+            <li>اعمال فیلتر با QueryBuilder در سرویس</li>
+            <li>تست فیلتر و اطمینان از حفظ صفحه‌بندی و مجوزها</li>
+        </ol>
+
+        <div class="note success">
+            کلمه یادآوری پروژه: «گل»<br>
+            هر زمان این کلمه گفته شود، ادامه کار از مرحله فیلتر مقالات
+            بر اساس تگ خواهد بود. اولین قدم، بررسی کد کامل
+            getAllArticlesController است.
+        </div>
+    </section>
+
+    <footer>
+        <p>پایان گزارش پیشرفت پروژه بک‌اند مقالات</p>
+        <p>مستند آموزشی برای مرور تغییرات و ادامه توسعه</p>
+    </footer>
+
+</main>
+</body>
+</html>
